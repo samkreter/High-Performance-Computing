@@ -1,0 +1,24 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/samkreter/school/High-Performance-Computing/HW0/include/parser.hpp
+iostream
+-
+vector
+-
+map
+-
+fstream
+-
+
+/Users/samkreter/school/High-Performance-Computing/HW0/test/runner.cpp
+iostream
+-
+../include/parser.hpp
+/Users/samkreter/school/High-Performance-Computing/HW0/include/parser.hpp
+
