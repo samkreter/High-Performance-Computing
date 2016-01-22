@@ -6,6 +6,7 @@
 #include <map>
 #include <fstream>
 #include <sstream>
+#include <chrono>
 // #include <exception>
 
 
@@ -18,7 +19,10 @@ public:
     using MapString_t = std::map<std::string,std::vector<float>>;
     Parser();
     ~Parser();
-    MapString_t* parse_file(std::string filename);
+    int parse_file(std::string filename, std::chrono::duration<double>* time_elapse);
+private:
+    MapString_t dataMap;
+
 
 };
 

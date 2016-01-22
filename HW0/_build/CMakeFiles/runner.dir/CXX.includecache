@@ -17,10 +17,10 @@ fstream
 -
 sstream
 -
+chrono
+-
 
 /Users/samkreter/school/High-Performance-Computing/HW0/test/runner.cpp
-iostream
--
 ../include/parser.hpp
 /Users/samkreter/school/High-Performance-Computing/HW0/include/parser.hpp
 

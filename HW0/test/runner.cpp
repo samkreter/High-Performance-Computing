@@ -1,25 +1,21 @@
-#include <iostream>
-
 #include "../include/parser.hpp"
 
+
 using namespace std;
+
+
 
 int main(){
 
     Parser p;
-    //watch out that the object stays in memory or the map will be deleted since it is
-    // only a reference to the object that is reutrn
-    Parser::MapString_t* dataMap = p.parse_file("../test/HPC_DATA.csv");
+    chrono::duration<double> read_time_elapse;
+    //have to remeber to free it from the heap
+    if(p.parse_file("../test/HPC_DATA.csv",&read_time_elapse)){
+        cout<<"Time to load data struct: "<<read_time_elapse.count()<<"s"<<endl;
 
-    // auto& start = (*dataMap).begin()->second;
 
-    // for(auto i : start){
-    //     cout<<i<<" ";
-    // }
 
-    // cout<<endl;
-
-    cout<<"done";
-
+        return 1;
+    }
     return 0;
 }
