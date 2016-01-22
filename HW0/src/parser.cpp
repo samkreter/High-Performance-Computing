@@ -49,7 +49,7 @@ int Parser::parse_file(std::string filename, std::chrono::duration<double>* time
 
 size_t Parser::num_of_entries(){
     size_t num_entries = 0;
-    for(auto row : dataMap){
+    for(auto& row : dataMap){
         num_entries += row.second.size();
     }
 
@@ -96,51 +96,24 @@ int Parser::find_column_bounds_rowbyrow(){
 
 }
 
-int Parser::find_column_bounds_asGo(){
-    //initlize the holder vector to the correct size to stop the overhead costs of resizing
-    std::vector<float> holderMax(dataMap.begin()->second.size(),FLT_MIN);
-    std::vector<float> holderMin(dataMap.begin()->second.size(),FLT_MAX);
-
-
-    std::chrono::time_point<std::chrono::system_clock> start, end;
-    int size = 0;
-
-    start = std::chrono::system_clock::now();
-
-    for(auto& row : dataMap){
-        size = row.second.size();
-        for(int i = 1; i < size; i++){
-            if(row.second.at(i) < holderMin.at(i)){
-                holderMin.at(i) = row.second.at(i);
-            }
-            if(row.second.at(i) > holderMax.at(i)){
-                holderMin.at(i) = row.second.at(i);
-            }
-        }
-    }
-    end = std::chrono::system_clock::now();
-
-
-
-    std::chrono::duration<double> time_elapse = end - start;
-    std::cout<<"Last execution "<<time_elapse.count()<<std::endl;
-    return 0;
-}
 
 int Parser::output_vector_to_file(std::string filename, std::vector<float> vec, std::vector<float> vec2){
     std::ofstream outputFile(filename);
-    std::ostringstream oss;
+    std::ostringstream ossVec, ossVec2;
 
     if(outputFile.is_open()){
-        std::copy(vec.begin(), vec.end()-1,
-        std::ostream_iterator<int>(oss, ","));
-        oss << vec.back();
-        outputFile<<oss.str()<<"\n";
 
+        outputFile<<"Mins,";
+        std::copy(vec.begin(), vec.end()-1,
+        std::ostream_iterator<float>(ossVec, ","));
+        ossVec << vec.back();
+        outputFile<<ossVec.str()<<"\n";
+
+        outputFile<<"Maxs,";
         std::copy(vec2.begin(), vec2.end()-1,
-        std::ostream_iterator<int>(oss, ","));
-        oss << vec2.back();
-        outputFile<<oss.str()<<"\n";
+        std::ostream_iterator<float>(ossVec2, ","));
+        ossVec2 << vec2.back();
+        outputFile<<ossVec2.str()<<"\n";
 
 
 
