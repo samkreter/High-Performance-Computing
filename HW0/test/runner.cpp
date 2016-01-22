@@ -13,7 +13,7 @@ int main(){
     if(p.parse_file("../test/HPC_DATA.csv",&read_time_elapse)){
         cout<<"Time to load data struct: "<<read_time_elapse.count()<<"s"<<endl;
 
-
+        p.find_column_bounds_rowbyrow();
 
         return 1;
     }

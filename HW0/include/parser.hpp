@@ -7,6 +7,7 @@
 #include <fstream>
 #include <sstream>
 #include <chrono>
+#include <cfloat>
 // #include <exception>
 
 
@@ -20,6 +21,10 @@ public:
     Parser();
     ~Parser();
     int parse_file(std::string filename, std::chrono::duration<double>* time_elapse);
+    size_t num_of_entries();
+    int find_column_bounds_asGo();
+    int output_vector_to_file(std::string filename, std::vector<float> vec);
+    int find_column_bounds_rowbyrow();
 private:
     MapString_t dataMap;
 
