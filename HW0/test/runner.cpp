@@ -12,7 +12,7 @@ int main(){
     //have to remeber to free it from the heap
     if(p.parse_file("../test/HPC_DATA.csv",&read_time_elapse)){
         cout<<"Time to load data struct: "<<read_time_elapse.count()<<"s"<<endl;
-
+        cout<<"The program parsed "<<p.num_of_lines()<<" lines and "<<p.num_of_entries()<<" entries"<<endl;
         p.find_column_bounds_rowbyrow();
 
         return 1;

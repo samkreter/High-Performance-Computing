@@ -46,7 +46,17 @@ int Parser::parse_file(std::string filename, std::chrono::duration<double>* time
 
 }
 
+
 size_t Parser::num_of_entries(){
+    size_t num_entries = 0;
+    for(auto row : dataMap){
+        num_entries += row.second.size();
+    }
+
+    return num_entries;
+}
+
+size_t Parser::num_of_lines(){
     return dataMap.size();
 }
 
@@ -56,9 +66,9 @@ int Parser::find_column_bounds_rowbyrow(){
     std::vector<float> holderMax;
     std::vector<float> holderMin;
 
-
     size_t size = dataMap.begin()->second.size();
 
+    start = std::chrono::system_clock::now();
     for(int i = 1; i < size; i++){
         float colMin = FLT_MAX, colMax = FLT_MIN;
         for(auto& row : dataMap){
@@ -72,8 +82,14 @@ int Parser::find_column_bounds_rowbyrow(){
         holderMax.push_back(colMax);
         holderMin.push_back(colMin);
     }
+    end = std::chrono::system_clock::now();
 
-    output_vector_to_file("outputfile.csv",holderMax);
+    std::chrono::duration<double> time_elapse = end - start;
+
+    output_vector_to_file("outputfile.csv",holderMin, holderMax);
+
+    std::cout<<"Time to find bounds: "<<time_elapse.count()<<"s\n"<<std::endl;
+    std::cout<<"Output can be found in outputfile.csv for bounds"<<std::endl;
 
     return 1;
 
@@ -104,7 +120,6 @@ int Parser::find_column_bounds_asGo(){
     }
     end = std::chrono::system_clock::now();
 
-    output_vector_to_file("outputfile.csv",holderMin);
 
 
     std::chrono::duration<double> time_elapse = end - start;
@@ -112,7 +127,7 @@ int Parser::find_column_bounds_asGo(){
     return 0;
 }
 
-int Parser::output_vector_to_file(std::string filename, std::vector<float> vec){
+int Parser::output_vector_to_file(std::string filename, std::vector<float> vec, std::vector<float> vec2){
     std::ofstream outputFile(filename);
     std::ostringstream oss;
 
@@ -121,6 +136,13 @@ int Parser::output_vector_to_file(std::string filename, std::vector<float> vec){
         std::ostream_iterator<int>(oss, ","));
         oss << vec.back();
         outputFile<<oss.str()<<"\n";
+
+        std::copy(vec2.begin(), vec2.end()-1,
+        std::ostream_iterator<int>(oss, ","));
+        oss << vec2.back();
+        outputFile<<oss.str()<<"\n";
+
+
 
         outputFile.close();
         return 1;

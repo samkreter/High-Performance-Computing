@@ -22,8 +22,9 @@ public:
     ~Parser();
     int parse_file(std::string filename, std::chrono::duration<double>* time_elapse);
     size_t num_of_entries();
+    size_t num_of_lines();
     int find_column_bounds_asGo();
-    int output_vector_to_file(std::string filename, std::vector<float> vec);
+    int output_vector_to_file(std::string filename, std::vector<float> vec, std::vector<float> vec2);
     int find_column_bounds_rowbyrow();
 private:
     MapString_t dataMap;
