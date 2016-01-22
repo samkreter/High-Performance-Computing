@@ -11,6 +11,15 @@ int main(){
     // only a reference to the object that is reutrn
     Parser::MapString_t* dataMap = p.parse_file("../test/HPC_DATA.csv");
 
+    // auto& start = (*dataMap).begin()->second;
+
+    // for(auto i : start){
+    //     cout<<i<<" ";
+    // }
+
+    // cout<<endl;
+
+    cout<<"done";
 
     return 0;
 }
