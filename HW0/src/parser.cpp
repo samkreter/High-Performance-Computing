@@ -1,6 +1,7 @@
 #include "../include/parser.hpp"
 
 
+
 int Parser::parse_file(std::string filename, std::chrono::duration<double>* time_elapse){
 
     if(!filename.empty()){
