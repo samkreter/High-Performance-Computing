@@ -1,2 +1,0 @@
-/Users/samkreter/school/High-Performance-Computing/HW0/_build/CMakeFiles/runner.dir
-/Users/samkreter/school/High-Performance-Computing/HW0/_build/CMakeFiles/parser.dir
