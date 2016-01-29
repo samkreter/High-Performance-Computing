@@ -8,7 +8,7 @@ all: hw1
 hw1: hw1.o MatrixMultiply.o
 	g++ -o hw1 hw1.o MatrixMultiply.o
 
-hw1.o:	hw1.cpp 
+hw1.o:	hw1.cpp
 	g++ ${OTHER_FLAGS} -Werror -Wall -c hw1.cpp
 
 MatrixMultiply.o : MatrixMultiply.hpp MatrixMultiply.cpp

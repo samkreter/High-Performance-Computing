@@ -6,6 +6,7 @@
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/matrix_proxy.hpp>
 #include <numeric>
+#include <stdlib.h>
 
 scottgs::MatrixMultiply::MatrixMultiply()
 {
@@ -26,12 +27,14 @@ scottgs::FloatMatrix scottgs::MatrixMultiply::operator()(const scottgs::FloatMat
 
 	scottgs::FloatMatrix result(lhs.size1(),rhs.size2());
 
+
+
+
+
+
 	int row = lhs.size1();
 
 	for(int i = 0; i < row; i++){
-		for(int t = 0; t < 1000; t++){
-			std::cout<<"hello"<<std::endl;
-		}
 		for(int j = 0; j < rhs.size2(); j++){
 			int sum = 0;
 			for(int k = 0; k < lhs.size2(); k++){
@@ -43,6 +46,8 @@ scottgs::FloatMatrix scottgs::MatrixMultiply::operator()(const scottgs::FloatMat
 
 		}
 	}
+
+
 
 
 

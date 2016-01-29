@@ -8,7 +8,7 @@ all: hw1_analyze
 hw1_analyze: hw1_analyze.o ../src/MatrixMultiply.o
 	g++ -o hw1_analyze hw1_analyze.o ../src/MatrixMultiply.o
 
-hw1_analyze.o:	hw1_analyze.cpp 
+hw1_analyze.o:	hw1_analyze.cpp
 	g++ ${OTHER_FLAGS} -Werror -Wall -c hw1_analyze.cpp
 
 clean:
@@ -32,7 +32,7 @@ data: p1.out
 test_1: hw1_analyze
 	@echo "Running hw1_analyze:"; (time ./hw1_analyze > p1.out) 2> p1.time
 
-# this will always run the test_1 because the p1.out 
+# this will always run the test_1 because the p1.out
 # always has a time stamp newer that the dependency of test_1
 p1.out: test_1
 
