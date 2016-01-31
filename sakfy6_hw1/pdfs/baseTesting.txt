@@ -1,0 +1,36 @@
+Running Timing Analysis
+-----------------------
+------------------------------------------------------------------
+100 iterations of matrix multiplication (functor) ran using (50,40)*(40,60) = (50,60)
+      :Method:Average Time (s):approximate ops:computed elements
+Data  Point:f:0.00529656:120110:3000
+------------------------------------------------------------------
+100 iterations of matrix multiplication (functor) ran using (60,50)*(50,70) = (60,70)
+      :Method:Average Time (s):approximate ops:computed elements
+Data  Point:f:0.00940459:210130:4200
+------------------------------------------------------------------
+100 iterations of matrix multiplication (functor) ran using (70,60)*(60,80) = (70,80)
+      :Method:Average Time (s):approximate ops:computed elements
+Data  Point:f:0.0148455:336150:5600
+------------------------------------------------------------------
+100 iterations of matrix multiplication (functor) ran using (80,70)*(70,90) = (80,90)
+      :Method:Average Time (s):approximate ops:computed elements
+Data  Point:f:0.0220685:504170:7200
+------------------------------------------------------------------
+100 iterations of matrix multiplication (method) ran using (50,40)*(40,60) = (50,60)
+      :Method:Average Time (s):approximate ops:computed elements
+Data Point:m1:0.00600752:120110:3000
+------------------------------------------------------------------
+100 iterations of matrix multiplication (method) ran using (60,50)*(50,70) = (60,70)
+      :Method:Average Time (s):approximate ops:computed elements
+Data Point:m1:0.0103636:210130:4200
+------------------------------------------------------------------
+100 iterations of matrix multiplication (method) ran using (70,60)*(60,80) = (70,80)
+      :Method:Average Time (s):approximate ops:computed elements
+Data Point:m1:0.016562:336150:5600
+------------------------------------------------------------------
+100 iterations of matrix multiplication (method) ran using (80,70)*(70,90) = (80,90)
+      :Method:Average Time (s):approximate ops:computed elements
+Data Point:m1:0.024585:504170:7200
+Timing Analysis Completed
+=========================
