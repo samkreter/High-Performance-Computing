@@ -12,7 +12,7 @@ void initRandomMatrix(scottgs::FloatMatrix& m);
 
 int main(int argc, char * argv[])
 {
-	
+
 	// ---------------------------------------------
 	// BEGIN: Timing Analysis
 	// ---------------------------------------------
@@ -20,9 +20,9 @@ int main(int argc, char * argv[])
 		  << "-----------------------" << std::endl;
 	srand(123456);	// use a constant number to seed the pseudo random number generator
 			// this way your results at least have the same input on a given system
-	
+
 	const unsigned int ITR=100;
-	
+
 	// ---------------------------------------------
 	// Build up a set of test matrix-pair sizes
 	// ---------------------------------------------
@@ -47,7 +47,7 @@ int main(int argc, char * argv[])
 
 	testList.push_back( std::make_pair(std::pair<unsigned short,unsigned short>(100,90),
 					   std::pair<unsigned short,unsigned short>(90,110)) );
-					   
+
 	testList.push_back( std::make_pair(std::pair<unsigned short,unsigned short>(200,90),
 					   std::pair<unsigned short,unsigned short>(90,220)) );
 
@@ -105,7 +105,7 @@ int main(int argc, char * argv[])
 	// ***********************************
 	// Test built-in Boost prod()
 	// ***********************************
-	
+
 	for (std::vector<std::pair<std::pair<unsigned short,unsigned short>, std::pair<unsigned short,unsigned short> > >::const_iterator t=testList.begin();
 		t!=testList.end();++t)
 	{
@@ -133,7 +133,7 @@ int main(int argc, char * argv[])
 		const unsigned long opsMaybe = l.size1() * r.size2() * l.size2() + l.size1() + r.size2();
 		const unsigned long elements = l.size1() * r.size2();
 		std::cout << "------------------------------------------------------------------" << std::endl
-			  << ITR << " iterations of matrix multiplication (method) ran using ("
+			  << ITR << " iterations of matrix multiplication boost (method) ran using ("
 			  << l.size1() <<","<< l.size2() <<")*("
 			  << r.size1() <<","<< r.size2() <<") = ("
 			  << l.size1() <<","<< r.size2() <<")" << std::endl
@@ -155,8 +155,8 @@ int main(int argc, char * argv[])
 void initRandomMatrix(scottgs::FloatMatrix& m)
 {
 	// Initialize each element.
-	// See discussion board for better way, 
-	// this was originally posted to be a 
+	// See discussion board for better way,
+	// this was originally posted to be a
 	// simple example of per-element access into the matric
 	for (unsigned i = 0; i < m.size1(); ++ i)
 	        for (unsigned j = 0; j < m.size2(); ++ j)
