@@ -3,34 +3,34 @@ Running Timing Analysis
 ------------------------------------------------------------------
 100 iterations of matrix multiplication (functor) ran using (50,40)*(40,60) = (50,60)
       :Method:Average Time (s):approximate ops:computed elements
-Data  Point:f:0.00078782:120110:3000
+Data  Point:f:0.00077052:120110:3000
 ------------------------------------------------------------------
 100 iterations of matrix multiplication (functor) ran using (60,50)*(50,70) = (60,70)
       :Method:Average Time (s):approximate ops:computed elements
-Data  Point:f:0.00130368:210130:4200
+Data  Point:f:0.00129747:210130:4200
 ------------------------------------------------------------------
 100 iterations of matrix multiplication (functor) ran using (70,60)*(60,80) = (70,80)
       :Method:Average Time (s):approximate ops:computed elements
-Data  Point:f:0.00201243:336150:5600
+Data  Point:f:0.00199076:336150:5600
 ------------------------------------------------------------------
 100 iterations of matrix multiplication (functor) ran using (80,70)*(70,90) = (80,90)
       :Method:Average Time (s):approximate ops:computed elements
-Data  Point:f:0.00277466:504170:7200
+Data  Point:f:0.00283188:504170:7200
 ------------------------------------------------------------------
 100 iterations of matrix multiplication boost (method) ran using (50,40)*(40,60) = (50,60)
       :Method:Average Time (s):approximate ops:computed elements
-Data Point:m1:0.0058848:120110:3000
+Data Point:m1:0.00584179:120110:3000
 ------------------------------------------------------------------
 100 iterations of matrix multiplication boost (method) ran using (60,50)*(50,70) = (60,70)
       :Method:Average Time (s):approximate ops:computed elements
-Data Point:m1:0.0101083:210130:4200
+Data Point:m1:0.0100741:210130:4200
 ------------------------------------------------------------------
 100 iterations of matrix multiplication boost (method) ran using (70,60)*(60,80) = (70,80)
       :Method:Average Time (s):approximate ops:computed elements
-Data Point:m1:0.0164933:336150:5600
+Data Point:m1:0.0161379:336150:5600
 ------------------------------------------------------------------
 100 iterations of matrix multiplication boost (method) ran using (80,70)*(70,90) = (80,90)
       :Method:Average Time (s):approximate ops:computed elements
-Data Point:m1:0.0241823:504170:7200
+Data Point:m1:0.0240323:504170:7200
 Timing Analysis Completed
 =========================

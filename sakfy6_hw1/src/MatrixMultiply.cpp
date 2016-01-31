@@ -48,10 +48,9 @@ scottgs::FloatMatrix scottgs::MatrixMultiply::operator()(const scottgs::FloatMat
 
 	float* right = new float[rhsSize1*rhsSize2];
 
-
 	for(int j = 0; j < rhsSize2; j++){
 		for(int i = 0; i < rhsSize1; i++){
-			right[COLMATRIXPOS(rhsSize2,i,j)] = rhs(i,j);
+			right[COLMATRIXPOS(rhsSize1,i,j)] = rhs(i,j);
 		}
 	}
 
@@ -60,7 +59,7 @@ scottgs::FloatMatrix scottgs::MatrixMultiply::operator()(const scottgs::FloatMat
 			sum = 0;
 			for(int k = 0; k < lhsSize2; k++){
 
-				sum += lef[ROWMATRIXPOS(lhsSize2,i,k)] * right[COLMATRIXPOS(rhsSize2,k,j)];
+				sum += lef[ROWMATRIXPOS(lhsSize2,i,k)] * right[COLMATRIXPOS(rhsSize1,k,j)];
 			}
 
 			result(i,j) = sum;
@@ -70,7 +69,7 @@ scottgs::FloatMatrix scottgs::MatrixMultiply::operator()(const scottgs::FloatMat
 
 
 
-	//delete[] right;
+	delete[] right;
 	delete[] lef;
 
 	return result;
