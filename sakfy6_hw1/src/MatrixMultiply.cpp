@@ -8,6 +8,8 @@
 #include <numeric>
 #include <stdlib.h>
 
+# define MATRIXPOS(rowSize , row, col) (rowSize * row) + col
+
 scottgs::MatrixMultiply::MatrixMultiply()
 {
 	;
@@ -27,42 +29,41 @@ scottgs::FloatMatrix scottgs::MatrixMultiply::operator()(const scottgs::FloatMat
 
 	scottgs::FloatMatrix result(lhs.size1(),rhs.size2());
 
+	int lhsSize1 = lhs.size1();
+	int lhsSize2 = lhs.size2();
+	int rhsSize1 = rhs.size1();
+	int rhsSize2 = rhs.size2();
+	int sum = 0;
 
-	float** lef = new float*[lhs.size1()];
 
-	for(int i = 0; i < lhs.size1(); i++){
-		lef[i] = new float[lhs.size2()];
-	}
+	float* lef = new float[lhsSize1*lhsSize2];
 
-	for(int i = 0; i < lhs.size1(); i++){
-		for(int j = 0; j < lhs.size2(); j++){
-			lef[i][j] = lhs(i,j);
+	for(int i = 0; i < lhsSize1; i++){
+		for(int j = 0; j < lhsSize2; j++){
+			lef[MATRIXPOS(lhsSize2,i,j)] = lhs(i,j);
 		}
 	}
 
-	float** right = new float*[rhs.size1()];
+	float** right = new float*[rhsSize1];
 
-	for(int i = 0; i < rhs.size1(); i++){
-		right[i] = new float[rhs.size2()];
+	for(int i = 0; i < rhsSize1; i++){
+		right[i] = new float[rhsSize2];
 	}
 
-	for(int i = 0; i < rhs.size1(); i++){
-		for(int j = 0; j < rhs.size2(); j++){
+	for(int i = 0; i < rhsSize1; i++){
+		for(int j = 0; j < rhsSize2; j++){
 			right[i][j] = rhs(i,j);
 		}
 	}
 
 
 
+	for(int i = 0; i < lhsSize1; i++){
+		for(int j = 0; j < rhsSize2; j++){
+			sum = 0;
+			for(int k = 0; k < lhsSize2; k++){
 
-	int row = lhs.size1();
-
-	for(int i = 0; i < row; i++){
-		for(int j = 0; j < rhs.size2(); j++){
-			int sum = 0;
-			for(int k = 0; k < lhs.size2(); k++){
-
-				sum += lef[i][k] * right[k][j];
+				sum += lef[MATRIXPOS(lhsSize2,i,k)] * right[k][j];
 			}
 
 			result(i,j) = sum;
@@ -70,13 +71,10 @@ scottgs::FloatMatrix scottgs::MatrixMultiply::operator()(const scottgs::FloatMat
 		}
 	}
 
-	for(int i = 0; i < rhs.size1(); i++){
+	for(int i = 0; i < rhsSize1; i++){
 		delete[] right[i];
 	}
 
-	for(int i = 0; i < lhs.size1(); i++){
-		delete[] lef[i];
-	}
 
 	delete[] right;
 	delete[] lef;
