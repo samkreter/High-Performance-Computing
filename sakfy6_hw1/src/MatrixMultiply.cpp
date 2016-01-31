@@ -8,7 +8,9 @@
 #include <numeric>
 #include <stdlib.h>
 
-# define MATRIXPOS(rowSize , row, col) (rowSize * row) + col
+# define ROWMATRIXPOS(rowSize , row, col) (rowSize * row) + col
+# define COLMATRIXPOS(colSize , row, col) (colSize * col) + row
+
 
 scottgs::MatrixMultiply::MatrixMultiply()
 {
@@ -40,30 +42,25 @@ scottgs::FloatMatrix scottgs::MatrixMultiply::operator()(const scottgs::FloatMat
 
 	for(int i = 0; i < lhsSize1; i++){
 		for(int j = 0; j < lhsSize2; j++){
-			lef[MATRIXPOS(lhsSize2,i,j)] = lhs(i,j);
+			lef[ROWMATRIXPOS(lhsSize2,i,j)] = lhs(i,j);
 		}
 	}
 
-	float** right = new float*[rhsSize1];
+	float* right = new float[rhsSize1*rhsSize2];
 
-	for(int i = 0; i < rhsSize1; i++){
-		right[i] = new float[rhsSize2];
-	}
 
-	for(int i = 0; i < rhsSize1; i++){
-		for(int j = 0; j < rhsSize2; j++){
-			right[i][j] = rhs(i,j);
+	for(int j = 0; j < rhsSize2; j++){
+		for(int i = 0; i < rhsSize1; i++){
+			right[COLMATRIXPOS(rhsSize2,i,j)] = rhs(i,j);
 		}
 	}
-
-
 
 	for(int i = 0; i < lhsSize1; i++){
 		for(int j = 0; j < rhsSize2; j++){
 			sum = 0;
 			for(int k = 0; k < lhsSize2; k++){
 
-				sum += lef[MATRIXPOS(lhsSize2,i,k)] * right[k][j];
+				sum += lef[ROWMATRIXPOS(lhsSize2,i,k)] * right[COLMATRIXPOS(rhsSize2,k,j)];
 			}
 
 			result(i,j) = sum;
@@ -71,12 +68,9 @@ scottgs::FloatMatrix scottgs::MatrixMultiply::operator()(const scottgs::FloatMat
 		}
 	}
 
-	for(int i = 0; i < rhsSize1; i++){
-		delete[] right[i];
-	}
 
 
-	delete[] right;
+	//delete[] right;
 	delete[] lef;
 
 	return result;
