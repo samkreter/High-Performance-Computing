@@ -22,7 +22,7 @@ analysis: data
 	(gnuplot < plot_hw1.gnu && \
 	gnuplot < plot_hw1.logxy.gnu && \
 	gnuplot < plot_hw1.logx.gnu && \
-	gnuplot < plot_hw1.logy.gnu ) 2> /dev/null ; \
+	gnuplot < plot_hw1.logy.gnu ) ; \
 	echo "Program Execution Times" ; \
 	cat p1.time
 

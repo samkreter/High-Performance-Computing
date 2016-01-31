@@ -28,6 +28,29 @@ scottgs::FloatMatrix scottgs::MatrixMultiply::operator()(const scottgs::FloatMat
 	scottgs::FloatMatrix result(lhs.size1(),rhs.size2());
 
 
+	float** lef = new float*[lhs.size1()];
+
+	for(int i = 0; i < lhs.size1(); i++){
+		lef[i] = new float[lhs.size2()];
+	}
+
+	for(int i = 0; i < lhs.size1(); i++){
+		for(int j = 0; j < lhs.size2(); j++){
+			lef[i][j] = lhs(i,j);
+		}
+	}
+
+	float** right = new float*[rhs.size1()];
+
+	for(int i = 0; i < rhs.size1(); i++){
+		right[i] = new float[rhs.size2()];
+	}
+
+	for(int i = 0; i < rhs.size1(); i++){
+		for(int j = 0; j < rhs.size2(); j++){
+			right[i][j] = rhs(i,j);
+		}
+	}
 
 
 
@@ -39,7 +62,7 @@ scottgs::FloatMatrix scottgs::MatrixMultiply::operator()(const scottgs::FloatMat
 			int sum = 0;
 			for(int k = 0; k < lhs.size2(); k++){
 
-				sum += lhs(i,k) * rhs(k,j);
+				sum += lef[i][k] * right[k][j];
 			}
 
 			result(i,j) = sum;
@@ -47,10 +70,16 @@ scottgs::FloatMatrix scottgs::MatrixMultiply::operator()(const scottgs::FloatMat
 		}
 	}
 
+	for(int i = 0; i < rhs.size1(); i++){
+		delete[] right[i];
+	}
 
+	for(int i = 0; i < lhs.size1(); i++){
+		delete[] lef[i];
+	}
 
-
-
+	delete[] right;
+	delete[] lef;
 
 	return result;
 }

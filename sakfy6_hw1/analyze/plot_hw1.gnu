@@ -1,6 +1,6 @@
 set terminal png nocrop enhanced
 set output 'hw1.1.png'
-set ylabel 'Seconds'
+set ylabel 'econds'
 set xlabel 'Approximate Operations'
 plot "p1.f.data" using 2:1 title 'f' with linespoints lw 2, \
         "p1.m1.data" using 2:1 title 'm1' with linespoints lw 2, \
