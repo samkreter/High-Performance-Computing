@@ -35,7 +35,7 @@ scottgs::FloatMatrix scottgs::MatrixMultiply::operator()(const scottgs::FloatMat
 	int lhsSize2 = lhs.size2();
 	int rhsSize1 = rhs.size1();
 	int rhsSize2 = rhs.size2();
-	int sum = 0;
+	float sum = 0;
 
 
 	float* lef = new float[lhsSize1*lhsSize2];
