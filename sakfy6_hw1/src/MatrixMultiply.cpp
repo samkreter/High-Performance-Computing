@@ -65,7 +65,6 @@ scottgs::FloatMatrix scottgs::MatrixMultiply::operator()(const scottgs::FloatMat
 	}
 
 
-
 	delete[] right;
 
 	return result;
