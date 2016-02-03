@@ -44,8 +44,8 @@ scottgs::FloatMatrix scottgs::MatrixMultiply::operator()(const scottgs::FloatMat
 	float* right = new float[rhsSize1*rhsSize2];
 	const float * rightHolder = &rhs(0,0);
 
-	for(int j = 0; j < rhsSize2; j++){
-		for(int i = 0; i < rhsSize1; i++){
+	for(int i = 0; i < rhsSize1; i++){
+		for(int j = 0; j < rhsSize2; j++){
 			right[COLMATRIXPOS(rhsSize1,i,j)] = rightHolder[ROWMATRIXPOS(rhsSize2,i,j)];
 		}
 	}
