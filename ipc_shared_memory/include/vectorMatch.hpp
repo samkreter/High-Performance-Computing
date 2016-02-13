@@ -4,13 +4,14 @@
 #include <vector>
 #include <iostream>
 #include <cmath>
+#include <map>
 
 class VectorMatch{
 
     using MapString_t = std::map<std::string,std::vector<float>>;
 
 public:
-    VectorMatch(MapString_t data):dataMap(data){};
+    VectorMatch(MapString_t* data):dataMap(data){};
 
     int computVectorMatch(std::string cmpFile, int k, int p);
 private:

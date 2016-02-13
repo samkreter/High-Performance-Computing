@@ -1,4 +1,5 @@
 #include "../include/parser.hpp"
+#include "../include/vectorMatch.hpp"
 
 
 using namespace std;
@@ -7,6 +8,11 @@ using namespace std;
 
 
 int main(){
+
+    VectorMatch v(NULL);
+    v.computVectorMatch("test",3,2);
+
+    exit(-1);
 
     Parser p;
 
