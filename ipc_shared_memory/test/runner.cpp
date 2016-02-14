@@ -1,6 +1,7 @@
 #include "../include/parser.hpp"
 #include "../include/vectorMatch.hpp"
 
+#include <iterator>
 
 using namespace std;
 
@@ -9,10 +10,6 @@ using namespace std;
 
 int main(){
 
-    VectorMatch v(NULL);
-    v.computVectorMatch("test",3,2);
-
-    exit(-1);
 
     Parser p;
 
@@ -26,7 +23,12 @@ int main(){
 
         auto test = p.getDataRef();
 
-        cout<<test->at("agricultural/agricultural00.tif").at(0);
+        exit(-1);
+
+        auto testIt = test->begin();
+
+        advance(testIt,1);
+        cout<<testIt->second.at(1);
 
         exit(-1);
         cout<<"Time to load data struct: "<<read_time_elapse.count()<<"s"<<endl;

@@ -5,8 +5,20 @@
 #include <iostream>
 #include <cmath>
 #include <map>
+#include <iterator>
+
+//sys ipc stuff, you know the real stuff
+#include <sys/ipc.h>
+#include <sys/shm.h>
+#include <sys/wait.h>
 
 class VectorMatch{
+
+
+    using shmKeyPair = struct{
+        float dist;
+        int lineNum;
+    };
 
     using MapString_t = std::map<std::string,std::vector<float>>;
 
@@ -17,7 +29,7 @@ public:
 private:
     MapString_t* dataMap;
 
-    int findDist(std::vector<float> vec1, std::vector<float> vec2, float* dist);
+    float findDist(std::vector<float>* vec1, std::vector<float>* vec2);
 
 };
 
