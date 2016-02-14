@@ -18,6 +18,11 @@ float VectorMatch::findDist(std::vector<float>* vec1, std::vector<float>* vec2){
 }
 
 
+bool shmKeyPairSort(const VectorMatch::shmKeyPair& pair1, const VectorMatch::shmKeyPair& pair2){
+    return pair1.dist < pair2.dist;
+}
+
+
 int VectorMatch::computVectorMatch(std::string cmpFile, int k, int p){
 
     //get all that shared mem stuff set up
@@ -113,6 +118,24 @@ int VectorMatch::computVectorMatch(std::string cmpFile, int k, int p){
         wait(NULL);
     }
 
+
+    shmKeyPair* shm;
+    //get the shared memory in the right address space
+    if ((shm = (shmKeyPair *)shmat(shmId, NULL, 0)) == (shmKeyPair *) -1){
+        std::cerr << "Init: Failed to attach shared memory (" << shmId << ")" << std::endl;
+        return -1;
+    }
+
+
+    std::vector<shmKeyPair> finalResults(shm,shm+(k*p));
+
+    std::sort(finalResults.begin(),finalResults.end(),shmKeyPairSort);
+
+    finalResults.resize(k);
+
+    for(int i = 0; i < 20; i++){
+        std::cout<<finalResults.at(i).dist<<std::endl;
+    }
 
     //delete the shrared mem, that stuff is scary
     if ((shmctl(shmId,IPC_RMID,0))==-1){

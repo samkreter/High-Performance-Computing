@@ -6,6 +6,7 @@
 #include <cmath>
 #include <map>
 #include <iterator>
+#include <algorithm>
 
 //sys ipc stuff, you know the real stuff
 #include <sys/ipc.h>
@@ -14,17 +15,17 @@
 
 class VectorMatch{
 
+    using MapString_t = std::map<std::string,std::vector<float>>;
+
+public:
 
     using shmKeyPair = struct{
         float dist;
         int lineNum;
     };
 
-    using MapString_t = std::map<std::string,std::vector<float>>;
 
-public:
     VectorMatch(MapString_t* data):dataMap(data){};
-
     int computVectorMatch(std::string cmpFile, int k, int p);
 private:
     MapString_t* dataMap;

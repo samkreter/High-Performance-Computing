@@ -21,21 +21,11 @@ int main(){
 
     if(p.parse_file(filename,&read_time_elapse)){
 
-        auto test = p.getDataRef();
+        VectorMatch v(p.getDataRef());
 
-        exit(-1);
+        v.computVectorMatch("agricultural/agricultural00.tif",100,2);
 
-        auto testIt = test->begin();
-
-        advance(testIt,1);
-        cout<<testIt->second.at(1);
-
-        exit(-1);
         cout<<"Time to load data struct: "<<read_time_elapse.count()<<"s"<<endl;
-        if(p.find_column_bounds_rowbyrow()){
-            cout<<"The program parsed "<<p.num_of_lines()<<" lines and "<<p.num_of_entries()<<" entries"<<endl;
-            return 1;
-        }
     }
     return 0;
 }
