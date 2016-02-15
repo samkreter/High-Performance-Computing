@@ -71,6 +71,11 @@ int VectorMatch::computVectorMatch(std::string cmpFile, int k, int p,std::chrono
             //map iterator to make it seem like random access
             MapString_t::iterator it = dataMap->begin();
 
+            int topBound = (procNum + divNum);
+            if(i == (p-1)){
+                topBound += dataMap->size() % p;
+            }
+
             //advance the iterator to the right line
             std::advance(it,(i*divNum));
 
