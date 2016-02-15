@@ -20,17 +20,19 @@ int main(){
 
     chrono::duration<double> read_time_elapse;
     chrono::duration<double> proc_time_elapse;
-    string filename("../../../2100_HPC.csv");
+    string filename("../../../4200_HPC.csv");
     //have to remeber to free it from the heap
     // cout<<"Please enter the file path relative to this execting program, for example '../test/HPC_DATA.csv': ";
     // cin>>filename;
 
     if(p.parse_file(filename,&read_time_elapse)){
+        cout<<"Time to load data struct: "<<read_time_elapse.count()<<"s"<<endl;
 
         VectorMatch v(p.getDataRef());
         for(int i = 0; i < procs.size(); i++){
             cout<<procs.at(i)<<" procs"<<endl;
-            v.computVectorMatch("agricultural/agricultural00.tif",100,procs.at(i),&proc_time_elapse);
+            v.computVectorMatch("agricultural/agricultural00_rot_000.tif",100,procs.at(i),&proc_time_elapse);
+            //v.computVectorMatch("agricultural/agricultural00.tif",100,procs.at(i),&proc_time_elapse);
             times.push_back(proc_time_elapse.count());
             cout<<endl<<endl;
         }
@@ -39,7 +41,7 @@ int main(){
         output_vector_to_file("test.csv",procs,times);
 
 
-        cout<<"Time to load data struct: "<<read_time_elapse.count()<<"s"<<endl;
+
     }
     return 0;
 }

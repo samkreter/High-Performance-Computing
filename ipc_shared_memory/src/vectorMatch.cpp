@@ -74,7 +74,6 @@ int VectorMatch::computVectorMatch(std::string cmpFile, int k, int p,std::chrono
             //advance the iterator to the right line
             std::advance(it,(i*divNum));
 
-
             //get the distances and store them into a map that auto sorts by distance
             for(int j = procNum * divNum; j < (procNum + divNum); j++){
 
