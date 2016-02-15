@@ -26,10 +26,10 @@ public:
     };
 
 
-    VectorMatch(MapString_t* data):dataMap(data){};
+    VectorMatch(std::shared_ptr<MapString_t> data):dataMap(data){};
     int computVectorMatch(std::string cmpFile, int k, int p,std::chrono::duration<double>* time_elapse);
 private:
-    MapString_t* dataMap;
+    std::shared_ptr<MapString_t> dataMap;
 
     float findDist(std::vector<float>* vec1, std::vector<float>* vec2);
 

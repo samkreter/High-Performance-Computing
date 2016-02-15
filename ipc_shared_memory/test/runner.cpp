@@ -5,6 +5,7 @@
 
 using namespace std;
 
+using MapString_t = std::map<std::string,std::vector<float>>;
 
 
 
@@ -12,8 +13,9 @@ int output_vector_to_file(std::string filename, std::vector<int> vec, std::vecto
 
 int main(){
 
+    shared_ptr<MapString_t> dataMap(new MapString_t);
 
-    Parser p;
+    Parser p(dataMap);
 
     vector<int> procs{1, 2, 4, 6, 8, 12, 16};
     vector<double> times;
@@ -28,7 +30,7 @@ int main(){
     if(p.parse_file(filename,&read_time_elapse)){
         cout<<"Time to load data struct: "<<read_time_elapse.count()<<"s"<<endl;
 
-        VectorMatch v(p.getDataRef());
+        VectorMatch v(dataMap);
         for(int i = 0; i < procs.size(); i++){
             cout<<procs.at(i)<<" procs"<<endl;
             v.computVectorMatch("agricultural/agricultural00_rot_000.tif",100,procs.at(i),&proc_time_elapse);

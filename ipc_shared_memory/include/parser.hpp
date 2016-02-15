@@ -19,6 +19,10 @@ public:
     //don't have to write out the declaration everytime
     using MapString_t = std::map<std::string,std::vector<float>>;
 
+
+    /// contructor to add the pointer to the map
+    Parser(std::shared_ptr<MapString_t> data):dataMap(data){};
+
     /// parse the actual contents of the file
     /// \param filename: name of the file to read and parse
     /// \param time_elapse: chrono duration to hold how much time it took
@@ -45,12 +49,9 @@ public:
     int find_column_bounds_rowbyrow();
 
 
-    /// get a reference to the data of this class
-    /// this is probably not very good practice but damn its convienent
-    MapString_t* getDataRef();
 private:
     //store the map of the data
-    MapString_t dataMap;
+    std::shared_ptr<MapString_t> dataMap;
 
 
 };

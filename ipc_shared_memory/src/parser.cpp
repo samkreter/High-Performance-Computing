@@ -26,13 +26,13 @@ int Parser::parse_file(std::string filename, std::chrono::duration<double>* time
                 std::getline(lineStream,entryFName,',');
 
                 //insert the file name as the key for a vector of floats into the map
-                dataMap.insert(std::pair<std::string,std::vector<float>>(entryFName,std::vector<float>()));
+                dataMap->insert(std::pair<std::string,std::vector<float>>(entryFName,std::vector<float>()));
 
                 //use a string stream to separte the columns
                 while(std::getline(lineStream,cell,',')){
                     //I love try catches, that c++ life
                     try{
-                        dataMap.at(entryFName).push_back(std::stof(cell));
+                        dataMap->at(entryFName).push_back(std::stof(cell));
                     }
                     //not so good to just catch all but it'll have to do for now
                     catch(...){
@@ -63,7 +63,7 @@ int Parser::parse_file(std::string filename, std::chrono::duration<double>* time
 size_t Parser::num_of_entries(){
     size_t num_entries = 0;
     //loop through references of each row in the ordered map and get the size
-    for(auto& row : dataMap){
+    for(auto& row : *dataMap){
         //just use the vector size function to get the number of entries besiseds the filename
         num_entries += row.second.size();
 
@@ -78,7 +78,7 @@ size_t Parser::num_of_entries(){
 // its alot more efficent, smart people wrote that, not just some random kid in comp sci
 // college. Probably some nice person in a basement that is covered with arduinos and doritos.
 size_t Parser::num_of_lines(){
-    return dataMap.size();
+    return dataMap->size();
 }
 
 
@@ -90,7 +90,7 @@ int Parser::find_column_bounds_rowbyrow(){
 
     //so we know how many columns there are,
     // this is assuming that each line has something, dangous ut i'll fix it next iterations
-    size_t size = dataMap.begin()->second.size();
+    size_t size = dataMap->begin()->second.size();
 
     start = std::chrono::system_clock::now();
     //go down the columns and find the maxes and mins
@@ -101,7 +101,7 @@ int Parser::find_column_bounds_rowbyrow(){
 
         try{
             //gotta love the c++11 foreach loop with references
-            for(auto& row : dataMap){
+            for(auto& row : *dataMap){
                 if(row.second.at(i) > colMax){
                     colMax = row.second.at(i);
                 }
@@ -160,6 +160,3 @@ int Parser::output_vector_to_file(std::string filename, std::vector<float> vec, 
     return 0;
 }
 
-Parser::MapString_t* Parser::getDataRef(){
-    return &(this->dataMap);
-}
