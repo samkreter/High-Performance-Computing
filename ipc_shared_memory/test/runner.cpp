@@ -8,13 +8,19 @@ using namespace std;
 
 
 
+int output_vector_to_file(std::string filename, std::vector<int> vec, std::vector<double> vec2);
+
 int main(){
 
 
     Parser p;
 
+    vector<int> procs{1, 2, 4, 6, 8, 12, 16};
+    vector<double> times;
+
     chrono::duration<double> read_time_elapse;
-    string filename("../test/HPC_DATA.csv");
+    chrono::duration<double> proc_time_elapse;
+    string filename("../../../2100_HPC.csv");
     //have to remeber to free it from the heap
     // cout<<"Please enter the file path relative to this execting program, for example '../test/HPC_DATA.csv': ";
     // cin>>filename;
@@ -22,10 +28,43 @@ int main(){
     if(p.parse_file(filename,&read_time_elapse)){
 
         VectorMatch v(p.getDataRef());
+        for(int i = 0; i < procs.size(); i++){
+            cout<<procs.at(i)<<" procs"<<endl;
+            v.computVectorMatch("agricultural/agricultural00.tif",100,procs.at(i),&proc_time_elapse);
+            times.push_back(proc_time_elapse.count());
+            cout<<endl<<endl;
+        }
 
-        v.computVectorMatch("agricultural/agricultural00.tif",100,2);
+
+        output_vector_to_file("test.csv",procs,times);
+
 
         cout<<"Time to load data struct: "<<read_time_elapse.count()<<"s"<<endl;
+    }
+    return 0;
+}
+
+
+
+int output_vector_to_file(std::string filename, std::vector<int> vec, std::vector<double> vec2){
+    std::ofstream outputFile(filename);
+    std::ostringstream ossVec, ossVec2;
+
+    if(outputFile.is_open()){
+
+        std::copy(vec.begin(), vec.end()-1,
+        std::ostream_iterator<float>(ossVec, ","));
+        ossVec << vec.back();
+        outputFile<<ossVec.str()<<"\n";
+
+        std::copy(vec2.begin(), vec2.end()-1,
+        std::ostream_iterator<float>(ossVec2, ","));
+        ossVec2 << vec2.back();
+        outputFile<<ossVec2.str()<<"\n";
+
+
+        outputFile.close();
+        return 1;
     }
     return 0;
 }

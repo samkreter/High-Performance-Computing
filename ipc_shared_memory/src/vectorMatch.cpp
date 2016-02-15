@@ -23,7 +23,7 @@ bool shmKeyPairSort(const VectorMatch::shmKeyPair& pair1, const VectorMatch::shm
 }
 
 
-int VectorMatch::computVectorMatch(std::string cmpFile, int k, int p){
+int VectorMatch::computVectorMatch(std::string cmpFile, int k, int p,std::chrono::duration<double>* time_elapse){
 
     //get all that shared mem stuff set up
     int shmId;          // ID of shared memory segment
@@ -31,6 +31,8 @@ int VectorMatch::computVectorMatch(std::string cmpFile, int k, int p){
     int shmFlag = IPC_CREAT | 0666; // Flag to create with rw permissions
     pid_t pid;
     unsigned long * sharedIndexPtr = NULL;
+
+    std::chrono::time_point<std::chrono::system_clock> start, end;
 
     std::vector<float>* cmpVec = &(dataMap->at(cmpFile));
 
@@ -49,7 +51,7 @@ int VectorMatch::computVectorMatch(std::string cmpFile, int k, int p){
 
 
 
-
+    start = std::chrono::system_clock::now();
     //this loops through and forks enough procs to process each file
     // 1 proc per file
     for(int i = 0; i < p; i++){
@@ -133,9 +135,13 @@ int VectorMatch::computVectorMatch(std::string cmpFile, int k, int p){
 
     finalResults.resize(k);
 
-    for(int i = 0; i < 20; i++){
-        std::cout<<finalResults.at(i).dist<<std::endl;
-    }
+    end = std::chrono::system_clock::now();
+
+    *time_elapse = end - start;
+
+    std::cout<<"Time for parent processing: "<<(*time_elapse).count()<<std::endl;
+
+
 
     //delete the shrared mem, that stuff is scary
     if ((shmctl(shmId,IPC_RMID,0))==-1){
@@ -146,3 +152,7 @@ int VectorMatch::computVectorMatch(std::string cmpFile, int k, int p){
     return 1;
 
 }
+
+
+
+

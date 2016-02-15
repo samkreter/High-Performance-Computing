@@ -7,6 +7,7 @@
 #include <map>
 #include <iterator>
 #include <algorithm>
+#include <chrono>
 
 //sys ipc stuff, you know the real stuff
 #include <sys/ipc.h>
@@ -26,7 +27,7 @@ public:
 
 
     VectorMatch(MapString_t* data):dataMap(data){};
-    int computVectorMatch(std::string cmpFile, int k, int p);
+    int computVectorMatch(std::string cmpFile, int k, int p,std::chrono::duration<double>* time_elapse);
 private:
     MapString_t* dataMap;
 
