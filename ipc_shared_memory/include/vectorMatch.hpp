@@ -8,6 +8,8 @@
 #include <iterator>
 #include <algorithm>
 #include <chrono>
+#include <fstream>
+#include <sstream>
 
 //sys ipc stuff, you know the real stuff
 #include <sys/ipc.h>

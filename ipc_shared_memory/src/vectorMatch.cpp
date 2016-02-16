@@ -17,6 +17,23 @@ float VectorMatch::findDist(std::vector<float>* vec1, std::vector<float>* vec2){
     exit(-1);
 }
 
+int output_vector_to_file(std::string filename, std::vector<VectorMatch::shmKeyPair> vec){
+    std::ofstream outputFile(filename);
+    std::ostringstream ossVec;
+
+    if(outputFile.is_open()){
+
+        for(auto& elem : vec){
+            ossVec<<elem.lineNum<<",";
+        }
+        outputFile<<ossVec.str()<<"\n";
+
+        outputFile.close();
+        return 1;
+    }
+    return 0;
+}
+
 
 bool shmKeyPairSort(const VectorMatch::shmKeyPair& pair1, const VectorMatch::shmKeyPair& pair2){
     return pair1.dist < pair2.dist;
@@ -31,6 +48,7 @@ int VectorMatch::computVectorMatch(std::string cmpFile, int k, int p,std::chrono
     int shmFlag = IPC_CREAT | 0666; // Flag to create with rw permissions
     pid_t pid;
     unsigned long * sharedIndexPtr = NULL;
+    std::vector<pid_t> minvan;
 
     std::chrono::time_point<std::chrono::system_clock> start, end;
 
@@ -97,6 +115,7 @@ int VectorMatch::computVectorMatch(std::string cmpFile, int k, int p,std::chrono
                 return -1;
             }
 
+
             //add the results to the proper segment of the shared memory
             int count = procNum * k;
             int kcount = 0;
@@ -115,13 +134,18 @@ int VectorMatch::computVectorMatch(std::string cmpFile, int k, int p,std::chrono
             exit(1);
 
         }
+        //parent
+        else{
+            minvan.push_back(pid);
+        }
     }
 
+    int status;
     //wait for all the child procs to finish
     for(int i = 0; i < p; i++){
         //probably not enough checks for the procs waiting but
         // i'll come back later and fix it
-        wait(NULL);
+        waitpid(minvan.at(i),&status, 0);
     }
 
 
@@ -137,7 +161,9 @@ int VectorMatch::computVectorMatch(std::string cmpFile, int k, int p,std::chrono
 
     std::sort(finalResults.begin(),finalResults.end(),shmKeyPairSort);
 
-    finalResults.resize(k);
+    //finalResults.resize(k);
+
+    output_vector_to_file("results.csv",finalResults);
 
     end = std::chrono::system_clock::now();
 
@@ -156,6 +182,8 @@ int VectorMatch::computVectorMatch(std::string cmpFile, int k, int p,std::chrono
     return 1;
 
 }
+
+
 
 
 
