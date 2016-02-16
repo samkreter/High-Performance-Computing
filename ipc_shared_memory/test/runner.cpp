@@ -13,6 +13,7 @@ int output_vector_to_file(std::string filename, std::vector<int> vec, std::vecto
 
 int main(){
 
+
     shared_ptr<MapString_t> dataMap(new MapString_t);
 
     Parser p(dataMap);
@@ -22,7 +23,7 @@ int main(){
 
     chrono::duration<double> read_time_elapse;
     chrono::duration<double> proc_time_elapse;
-    string filename("../../../4200_HPC.csv");
+    string filename("../../../2100_HPC.csv");
     //have to remeber to free it from the heap
     // cout<<"Please enter the file path relative to this execting program, for example '../test/HPC_DATA.csv': ";
     // cin>>filename;
@@ -31,10 +32,10 @@ int main(){
         cout<<"Time to load data struct: "<<read_time_elapse.count()<<"s"<<endl;
 
         VectorMatch v(dataMap);
-        for(int i = 0; i < procs.size(); i++){
+        for(int i = 0; i < 1; i++){
             cout<<procs.at(i)<<" procs"<<endl;
-            v.computVectorMatch("agricultural/agricultural00_rot_000.tif",100,procs.at(i),&proc_time_elapse);
-            //v.computVectorMatch("agricultural/agricultural00.tif",100,procs.at(i),&proc_time_elapse);
+            //v.computVectorMatch("agricultural/agricultural00_rot_000.tif",100,procs.at(i),&proc_time_elapse);
+            v.computVectorMatch("agricultural/agricultural00.tif",100,4,&proc_time_elapse);
             times.push_back(proc_time_elapse.count());
             cout<<endl<<endl;
         }

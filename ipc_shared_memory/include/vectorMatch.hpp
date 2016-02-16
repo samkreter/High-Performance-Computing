@@ -10,6 +10,7 @@
 #include <chrono>
 #include <fstream>
 #include <sstream>
+#include <cfloat>
 
 //sys ipc stuff, you know the real stuff
 #include <sys/ipc.h>

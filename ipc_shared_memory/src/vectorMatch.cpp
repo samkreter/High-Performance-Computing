@@ -8,7 +8,7 @@ float VectorMatch::findDist(std::vector<float>* vec1, std::vector<float>* vec2){
 
     if(vSize == vec2->size()){
         for(int i = 0; i < vSize; i++){
-            sum += std::abs((vec1+i) - (vec2+i));
+            sum += std::abs(vec1->at(i) - vec2->at(i));
         }
 
         return sum / (float) vSize;
@@ -20,13 +20,19 @@ float VectorMatch::findDist(std::vector<float>* vec1, std::vector<float>* vec2){
 int output_vector_to_file(std::string filename, std::vector<VectorMatch::shmKeyPair> vec){
     std::ofstream outputFile(filename);
     std::ostringstream ossVec;
+    std::ostringstream ossVec2;
 
     if(outputFile.is_open()){
 
         for(auto& elem : vec){
-            ossVec<<elem.lineNum<<",";
+            ossVec<<elem.dist<<",";
         }
         outputFile<<ossVec.str()<<"\n";
+
+        for(auto& elem : vec){
+            ossVec2<<elem.lineNum<<",";
+        }
+        outputFile<<ossVec2.str()<<"\n";
 
         outputFile.close();
         return 1;
@@ -56,14 +62,21 @@ int VectorMatch::computVectorMatch(std::string cmpFile, int k, int p,std::chrono
 
     int divNum = dataMap->size() / p;
 
-    if(k > divNum){
-        std::cerr<<"K is bigger than the div number so offs in shared memeory\n";
-        return -1;
-    }
+    // if(k > divNum){
+    //     std::cerr<<"K is bigger than the div number so offs in shared memeory\n";
+    //     return -1;
+    // }
 
     //create the shared memeory
     if ((shmId = shmget(shmKey, (p * k * sizeof(shmKeyPair)) , shmFlag)) < 0){
         std::cerr << "Init: Failed to initialize shared memory (" << shmId << ")" << std::endl;
+        return -1;
+    }
+
+    shmKeyPair* shm;
+    //get the shared memory in the right address space
+    if ((shm = (shmKeyPair *)shmat(shmId, NULL, 0)) == (shmKeyPair *) -1){
+        std::cerr << "Init: Failed to attach shared memory (" << shmId << ")" << std::endl;
         return -1;
     }
 
@@ -89,45 +102,42 @@ int VectorMatch::computVectorMatch(std::string cmpFile, int k, int p,std::chrono
             //map iterator to make it seem like random access
             MapString_t::iterator it = dataMap->begin();
 
-            int topBound = (procNum + divNum);
+            int topBound = ((procNum * divNum) + divNum);
             if(i == (p-1)){
                 topBound += dataMap->size() % p;
             }
 
             //advance the iterator to the right line
-            std::advance(it,(i*divNum));
+            std::advance(it,(procNum*divNum));
+
 
             //get the distances and store them into a map that auto sorts by distance
-            for(int j = procNum * divNum; j < (procNum + divNum); j++){
+            for(int j = procNum * divNum; j < topBound -1; j++){
 
                 //add the distance to the results map
                 results.insert(std::pair<float,int>(findDist(cmpVec,&(it->second)),j));
+
 
                 //advance the iterator to the next line
                 std::advance(it,1);
             }
 
 
-            shmKeyPair* shm;
-            //get the shared memory in the right address space
-            if ((shm = (shmKeyPair *)shmat(shmId, NULL, 0)) == (shmKeyPair *) -1){
-                std::cerr << "Init: Failed to attach shared memory (" << shmId << ")" << std::endl;
-                return -1;
-            }
-
 
             //add the results to the proper segment of the shared memory
             int count = procNum * k;
-            int kcount = 0;
+
             for(auto& pair : results){
-                //i'll work on this latter, super bad
-                if(kcount >= k){
-                    break;
-                }
                 shm[count].dist = pair.first;
                 shm[count].lineNum = pair.second;
                 count++;
-                kcount++;
+            }
+
+            //not usre if this is going to work but lets try
+            //zero out the contents
+            for(;count <= k; count++){
+                std::cout<<"hhhhhhhh: "<<count;
+                shm[count].dist = FLT_MAX;
             }
 
 
@@ -149,19 +159,18 @@ int VectorMatch::computVectorMatch(std::string cmpFile, int k, int p,std::chrono
     }
 
 
-    shmKeyPair* shm;
-    //get the shared memory in the right address space
-    if ((shm = (shmKeyPair *)shmat(shmId, NULL, 0)) == (shmKeyPair *) -1){
-        std::cerr << "Init: Failed to attach shared memory (" << shmId << ")" << std::endl;
-        return -1;
-    }
-
-
     std::vector<shmKeyPair> finalResults(shm,shm+(k*p));
 
     std::sort(finalResults.begin(),finalResults.end(),shmKeyPairSort);
 
-    //finalResults.resize(k);
+    finalResults.resize(k);
+
+    for(auto& elem : finalResults){
+        if(elem.dist == FLT_MAX){
+
+        }
+    }
+
 
     output_vector_to_file("results.csv",finalResults);
 
