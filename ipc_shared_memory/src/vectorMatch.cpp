@@ -112,10 +112,10 @@ int VectorMatch::computVectorMatch(std::string cmpFile, int k, int p,std::chrono
 
 
             //get the distances and store them into a map that auto sorts by distance
-            for(int j = procNum * divNum; j < topBound -1; j++){
+            for(long j = procNum * divNum; j < topBound -1; j++){
 
                 //add the distance to the results map
-                results.insert(std::pair<float,int>(findDist(cmpVec,&(it->second)),j));
+                results.insert(std::pair<float,long>(findDist(cmpVec,&(it->second)),j));
 
 
                 //advance the iterator to the next line

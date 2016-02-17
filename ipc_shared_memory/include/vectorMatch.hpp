@@ -28,7 +28,7 @@ public:
 
     using shmKeyPair = struct{
         float dist;
-        int lineNum;
+        long lineNum;
     };
 
 
