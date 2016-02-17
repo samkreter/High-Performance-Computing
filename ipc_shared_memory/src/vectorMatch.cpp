@@ -122,8 +122,6 @@ int VectorMatch::computVectorMatch(std::string cmpFile, int k, int p,std::chrono
                 std::advance(it,1);
             }
 
-
-
             //add the results to the proper segment of the shared memory
             int count = procNum * k;
 
