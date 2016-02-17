@@ -43,7 +43,7 @@ int main(){
 
         output_vector_to_file("test.csv",procs,times);
 
-        system("python3 ../plotter.py");
+        cout<<"system output: "<<system("python ../plotter.py");
 
     }
     return 0;
