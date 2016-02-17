@@ -49,7 +49,7 @@ int main(){
     return 0;
 }
 
-int createMapToLineNumber(shared_ptr<map<string,long>> newMap, shared_ptr<MapString_t> dataMap){
+int createMapToLineNumber(shared_ptr<map<string,long>> newMap){
     long lineCounter = 0;
     for(auto& data : *dataMap){
         (*newMap).insert(pair<string,long>(data.first,lineCounter));
