@@ -170,12 +170,6 @@ int VectorMatch::computVectorMatch(std::string cmpFile, int k, int p,std::chrono
 
     output_vector_to_file("results.csv",finalResults);
 
-    for(auto& t : finalResults){
-        std::cout<<t.dist<<" ";
-    }
-    std::cout<<std::endl;
-
-
     *time_elapse = end - start;
 
     std::cout<<"Time for parent processing: "<<(*time_elapse).count()<<std::endl;

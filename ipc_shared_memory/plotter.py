@@ -2,7 +2,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-data = np.genfromtxt('./_build/test.csv', delimiter=',')
+
+data = np.genfromtxt('test.csv', delimiter=',')
+
 
 
 
