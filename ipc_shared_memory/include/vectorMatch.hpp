@@ -4,6 +4,7 @@
 #include <vector>
 #include <iostream>
 #include <cmath>
+#include <memory>
 #include <map>
 #include <iterator>
 #include <algorithm>

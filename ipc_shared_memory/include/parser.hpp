@@ -5,6 +5,7 @@
 #include <vector>
 #include <map>
 #include <fstream>
+#include <memory>
 #include <sstream>
 #include <chrono>
 //used for floats max and mins

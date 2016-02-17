@@ -148,6 +148,7 @@ int VectorMatch::computVectorMatch(std::string cmpFile, int k, int p,std::chrono
         }
     }
 
+
     int status;
     //wait for all the child procs to finish
     for(int i = 0; i < p; i++){
@@ -157,22 +158,23 @@ int VectorMatch::computVectorMatch(std::string cmpFile, int k, int p,std::chrono
     }
 
 
+
     std::vector<shmKeyPair> finalResults(shm,shm+(k*p));
 
     std::sort(finalResults.begin(),finalResults.end(),shmKeyPairSort);
 
     finalResults.resize(k);
 
-    for(auto& elem : finalResults){
-        if(elem.dist == FLT_MAX){
 
-        }
-    }
-
+    end = std::chrono::system_clock::now();
 
     output_vector_to_file("results.csv",finalResults);
 
-    end = std::chrono::system_clock::now();
+    for(auto& t : finalResults){
+        std::cout<<t.dist<<" ";
+    }
+    std::cout<<std::endl;
+
 
     *time_elapse = end - start;
 
