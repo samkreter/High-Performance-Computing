@@ -6,6 +6,8 @@
 #include <map>
 #include <fstream>
 #include <sstream>
+#include <iterator>
+#include <memory>
 #include <chrono>
 //used for floats max and mins
 #include <cfloat>
