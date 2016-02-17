@@ -7,6 +7,8 @@
 #include <fstream>
 #include <memory>
 #include <sstream>
+#include <iterator>
+#include <memory>
 #include <chrono>
 //used for floats max and mins
 #include <cfloat>

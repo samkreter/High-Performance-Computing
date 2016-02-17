@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <iostream>
+#include <memory>
 #include <cmath>
 #include <memory>
 #include <map>
@@ -14,6 +15,7 @@
 #include <cfloat>
 
 //sys ipc stuff, you know the real stuff
+#include <unistd.h>
 #include <sys/ipc.h>
 #include <sys/shm.h>
 #include <sys/wait.h>
