@@ -28,6 +28,8 @@ int output_vector_to_file(std::string filename, std::vector<VectorMatch::nameKey
             ossVec<<elem.filename<<","<<elem.dist<<std::endl;
         }
 
+        outputFile<<ossVec.str();
+
         outputFile.close();
         return 1;
     }
@@ -188,6 +190,8 @@ int VectorMatch::computVectorMatch(std::string cmpFile, int k, int p,std::chrono
         finalResultsName.at(indexer).dist = elem.dist;
         indexer++;
     }
+
+    finalResultsName.resize(k);
 
     end = std::chrono::system_clock::now();
 
