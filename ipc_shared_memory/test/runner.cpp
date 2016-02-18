@@ -49,15 +49,6 @@ int main(){
     return 0;
 }
 
-int createMapToLineNumber(shared_ptr<map<string,long>> newMap){
-    long lineCounter = 0;
-    for(auto& data : *dataMap){
-        (*newMap).insert(pair<string,long>(data.first,lineCounter));
-        lineCounter++;
-    }
-
-    return 1;
-}
 
 
 int output_vector_to_file(std::string filename, std::vector<int> vec, std::vector<double> vec2){

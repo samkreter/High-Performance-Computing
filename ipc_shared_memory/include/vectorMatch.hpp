@@ -14,6 +14,7 @@
 #include <sstream>
 #include <cfloat>
 
+
 //sys ipc stuff, you know the real stuff
 #include <unistd.h>
 #include <sys/ipc.h>
@@ -22,13 +23,20 @@
 
 class VectorMatch{
 
-    using MapString_t = std::map<std::string,std::vector<float>>;
+
 
 public:
+
+    using MapString_t = std::map<std::string,std::vector<float>>;
 
     using shmKeyPair = struct{
         float dist;
         long lineNum;
+    };
+
+    using nameKeyPair = struct{
+        std::string filename;
+        float dist;
     };
 
 

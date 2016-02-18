@@ -17,22 +17,16 @@ float VectorMatch::findDist(std::vector<float>* vec1, std::vector<float>* vec2){
     exit(-1);
 }
 
-int output_vector_to_file(std::string filename, std::vector<VectorMatch::shmKeyPair> vec){
+int output_vector_to_file(std::string filename, std::vector<VectorMatch::nameKeyPair>* vec){
     std::ofstream outputFile(filename);
     std::ostringstream ossVec;
-    std::ostringstream ossVec2;
+
 
     if(outputFile.is_open()){
 
-        for(auto& elem : vec){
-            ossVec<<elem.dist<<",";
+        for(auto& elem : *vec){
+            ossVec<<elem.filename<<","<<elem.dist<<std::endl;
         }
-        outputFile<<ossVec.str()<<"\n";
-
-        for(auto& elem : vec){
-            ossVec2<<elem.lineNum<<",";
-        }
-        outputFile<<ossVec2.str()<<"\n";
 
         outputFile.close();
         return 1;
@@ -43,6 +37,17 @@ int output_vector_to_file(std::string filename, std::vector<VectorMatch::shmKeyP
 
 bool shmKeyPairSort(const VectorMatch::shmKeyPair& pair1, const VectorMatch::shmKeyPair& pair2){
     return pair1.dist < pair2.dist;
+}
+
+
+int createMapToLineNumber(std::map<long, std::string>* newMap, std::shared_ptr<VectorMatch::MapString_t> dMap){
+    long lineCounter = 0;
+    for(auto& data : *dMap){
+        (*newMap).insert(std::pair<long,std::string>(lineCounter,data.first));
+        lineCounter++;
+    }
+
+    return 1;
 }
 
 
@@ -134,7 +139,6 @@ int VectorMatch::computVectorMatch(std::string cmpFile, int k, int p,std::chrono
             //not usre if this is going to work but lets try
             //zero out the contents
             for(;count <= k; count++){
-                std::cout<<"hhhhhhhh: "<<count;
                 shm[count].dist = FLT_MAX;
             }
 
@@ -159,16 +163,35 @@ int VectorMatch::computVectorMatch(std::string cmpFile, int k, int p,std::chrono
 
 
 
-    std::vector<shmKeyPair> finalResults(shm,shm+(k*p));
+    std::vector<shmKeyPair> finalResultsNum(shm,shm+(k*p));
 
-    std::sort(finalResults.begin(),finalResults.end(),shmKeyPairSort);
+    //hold the final filname matches
+    std::vector<nameKeyPair> finalResultsName(k);
 
-    finalResults.resize(k);
+    std::sort(finalResultsNum.begin(),finalResultsNum.end(),shmKeyPairSort);
 
+    finalResultsNum.resize(k);
+
+
+
+
+    std::map<long,std::string> nameMap;
+
+
+    createMapToLineNumber(&nameMap,dataMap);
+
+
+    int indexer = 0;
+    for(auto elem : finalResultsNum){
+        finalResultsName.push_back(nameKeyPair());
+        finalResultsName.at(indexer).filename = nameMap.at(elem.lineNum);
+        finalResultsName.at(indexer).dist = elem.dist;
+        indexer++;
+    }
 
     end = std::chrono::system_clock::now();
 
-    output_vector_to_file("results.csv",finalResults);
+    output_vector_to_file("results.csv",&finalResultsName);
 
     *time_elapse = end - start;
 
