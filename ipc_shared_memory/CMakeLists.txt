@@ -6,6 +6,6 @@ set(CMAKE_CXX_FLAGS "--std=c++11 -O3 -Werror")
 add_library(vectorMatch src/vectorMatch.cpp)
 add_library(parser src/parser.cpp)
 
-add_executable(runner test/runner.cpp)
-target_link_libraries(runner parser vectorMatch)
+add_executable(sakfy6_hw2 test/runner.cpp)
+target_link_libraries(sakfy6_hw2 parser vectorMatch)
 

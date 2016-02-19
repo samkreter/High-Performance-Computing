@@ -1,12 +1,16 @@
 #include "../include/vectorMatch.hpp"
 
 
+
 float VectorMatch::findDist(std::vector<float>* vec1, std::vector<float>* vec2){
 
     int vSize = vec1->size();
     float sum = 0;
 
+    //make sure the vectors are the right size
     if(vSize == vec2->size()){
+
+        //run the l1 norm formula
         for(int i = 0; i < vSize; i++){
             sum += std::abs(vec1->at(i) - vec2->at(i));
         }
@@ -17,7 +21,9 @@ float VectorMatch::findDist(std::vector<float>* vec1, std::vector<float>* vec2){
     exit(-1);
 }
 
+/// print the vectors to a file, for the final output
 int output_vector_to_file(std::string filename, std::vector<VectorMatch::nameKeyPair>* vec){
+
     std::ofstream outputFile(filename);
     std::ostringstream ossVec;
 
@@ -37,11 +43,13 @@ int output_vector_to_file(std::string filename, std::vector<VectorMatch::nameKey
 }
 
 
+//just a helper function for the sort with my custom structs
 bool shmKeyPairSort(const VectorMatch::shmKeyPair& pair1, const VectorMatch::shmKeyPair& pair2){
     return pair1.dist < pair2.dist;
 }
 
 
+//this is really slow but it'll work for now till I get to optimizing this
 int createMapToLineNumber(std::map<long, std::string>* newMap, std::shared_ptr<VectorMatch::MapString_t> dMap){
     long lineCounter = 0;
     for(auto& data : *dMap){
@@ -61,18 +69,19 @@ int VectorMatch::computVectorMatch(std::string cmpFile, int k, int p,std::chrono
     int shmFlag = IPC_CREAT | 0666; // Flag to create with rw permissions
     pid_t pid;
     unsigned long * sharedIndexPtr = NULL;
+
+    //store the pids for the procs
     std::vector<pid_t> minvan;
 
+    //start and end for times the proc work
     std::chrono::time_point<std::chrono::system_clock> start, end;
 
+    //get the vector to compare with from the input file
     std::vector<float>* cmpVec = &(dataMap->at(cmpFile));
 
+    //get the number of lines each proc gets to process
     int divNum = dataMap->size() / p;
 
-    // if(k > divNum){
-    //     std::cerr<<"K is bigger than the div number so offs in shared memeory\n";
-    //     return -1;
-    // }
 
     //create the shared memeory
     if ((shmId = shmget(shmKey, (p * k * sizeof(shmKeyPair)) , shmFlag)) < 0){
@@ -164,23 +173,28 @@ int VectorMatch::computVectorMatch(std::string cmpFile, int k, int p,std::chrono
     }
 
 
-
+    //store the final results with line numbers
     std::vector<shmKeyPair> finalResultsNum(shm,shm+(k*p));
 
     //hold the final filname matches
     std::vector<nameKeyPair> finalResultsName(k);
 
+    //sort the final results
     std::sort(finalResultsNum.begin(),finalResultsNum.end(),shmKeyPairSort);
 
+    //cut them off at the knees
     finalResultsNum.resize(k);
 
 
 
-
+    //map with the line numbers to names
     std::map<long,std::string> nameMap;
 
 
+    //get the map from the data
+    //defintily first thing i'm getting rid of in the optimization
     createMapToLineNumber(&nameMap,dataMap);
+
 
 
     int indexer = 0;
@@ -191,10 +205,13 @@ int VectorMatch::computVectorMatch(std::string cmpFile, int k, int p,std::chrono
         indexer++;
     }
 
+
+    //final cut off at the knees
     finalResultsName.resize(k);
 
     end = std::chrono::system_clock::now();
 
+    //get the output out to that csv, yea
     output_vector_to_file("results.csv",&finalResultsName);
 
     *time_elapse = end - start;
@@ -202,8 +219,8 @@ int VectorMatch::computVectorMatch(std::string cmpFile, int k, int p,std::chrono
     std::cout<<"Time for parent processing: "<<(*time_elapse).count()<<std::endl;
 
 
-
     //delete the shrared mem, that stuff is scary
+    //but its actually working great this time around
     if ((shmctl(shmId,IPC_RMID,0))==-1){
         std::cerr<<"shared mem couldn't be deleted"<<std::endl;
         return -1;
