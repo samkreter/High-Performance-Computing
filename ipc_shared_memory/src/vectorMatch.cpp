@@ -1,6 +1,8 @@
 #include "../include/vectorMatch.hpp"
 
 
+# define ROWMATRIXPOS(rowSize , row, col) (rowSize * row) + col
+
 
 float VectorMatch::findDist(std::vector<float>* vec1, std::vector<float>* vec2){
 

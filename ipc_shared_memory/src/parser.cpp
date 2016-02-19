@@ -5,6 +5,9 @@
 int Parser::parse_file(std::string filename, std::chrono::duration<double>* time_elapse){
 
     if(!filename.empty()){
+
+        long LineIndexer = 0;
+        int lineLength = 0;
         //set up the chono vars
         std::chrono::time_point<std::chrono::system_clock> start, end;
         //open the input file
@@ -26,13 +29,16 @@ int Parser::parse_file(std::string filename, std::chrono::duration<double>* time
                 std::getline(lineStream,entryFName,',');
 
                 //insert the file name as the key for a vector of floats into the map
-                dataMap->insert(std::pair<std::string,std::vector<float>>(entryFName,std::vector<float>()));
+                dataMap->insert(std::pair<std::string,long>(entryFName,indexer));
 
+                lineLength = 0;
                 //use a string stream to separte the columns
                 while(std::getline(lineStream,cell,',')){
+                    lineLength++;
                     //I love try catches, that c++ life
                     try{
-                        dataMap->at(entryFName).push_back(std::stof(cell));
+                        floatsMap[indexer] = std::stof(cell);
+                        indexer++;
                     }
                     //not so good to just catch all but it'll have to do for now
                     catch(...){
@@ -44,6 +50,7 @@ int Parser::parse_file(std::string filename, std::chrono::duration<double>* time
             //get the end time
             end = std::chrono::system_clock::now();
 
+            *outLineLegnth = lineLength;
             //do math good
             *time_elapse = end - start;
 
