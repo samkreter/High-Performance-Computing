@@ -1,5 +1,5 @@
-#Homework 0
-Just a simple parser and to get back up to date with c++
+#Homework 2
+Compare vectors in a database file using the L1 norm then save top k cloes matches in csv file
 
 #Getting Started
 
@@ -11,6 +11,8 @@ Just a simple parser and to get back up to date with c++
 
     `$ make`
 
-3. Run the executable "runner" and enter the file to parse
+3. Run the executable "sakfy6_hw2" with the arguments
 
-    `$ ./runner`
+    `$ ./sakfy6_hw2 <query/_filename_line_to_match> <dataFile> <K> <P>`
+
+    - All output will be written to results.csv
