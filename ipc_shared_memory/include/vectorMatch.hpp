@@ -27,7 +27,8 @@ class VectorMatch{
 
 public:
     //I really don't want to write this 1000 times, so thank you c++ typedef
-    using MapString_t = std::map<std::string,std::vector<float>>;
+    using MapString_t = std::map<std::string,long>;
+    using DataVector_t = std::vector<float>;
 
     //store the pairs in shared memory
     using shmKeyPair = struct{
@@ -44,7 +45,7 @@ public:
     /// assing the data pointer to the local struct
     /// \param data: pointer to the data map with the data
     /// \return nothing, it just a poor little constructor
-    VectorMatch(std::shared_ptr<MapString_t> data):dataMap(data){};
+    VectorMatch(std::shared_ptr<MapString_t> nameMap, std::shared_ptr<DataVector_t> dataVector):nameMap(nameMap),dataVector(dataVector){};
 
     /// Main function that executes the vector comparing
     /// \param cmpFIle: filename that you want to compare to the others
@@ -55,7 +56,8 @@ public:
     int computVectorMatch(std::string cmpFile, int k, int p,std::chrono::duration<double>* time_elapse);
 private:
     /// pointer to the datamap
-    std::shared_ptr<MapString_t> dataMap;
+    std::shared_ptr<MapString_t> nameMap;
+    std::shared_ptr<DataVector_t> dataVector;
 
     /// find the distance between two veftors with l1 norm
     /// \param vec1: first vector to compare
