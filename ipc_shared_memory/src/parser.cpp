@@ -6,8 +6,8 @@ int Parser::parse_file(std::string filename, std::chrono::duration<double>* time
 
     if(!filename.empty()){
 
-        long LineIndexer = 0;
-        int lineLength = 0;
+        long indexer = 0;
+        long lineSize = 0;
         //set up the chono vars
         std::chrono::time_point<std::chrono::system_clock> start, end;
         //open the input file
@@ -29,15 +29,15 @@ int Parser::parse_file(std::string filename, std::chrono::duration<double>* time
                 std::getline(lineStream,entryFName,',');
 
                 //insert the file name as the key for a vector of floats into the map
-                dataMap->insert(std::pair<std::string,long>(entryFName,indexer));
+                nameMap->insert(std::pair<std::string,long>(entryFName,indexer));
 
-                lineLength = 0;
+                lineSize = 0;
                 //use a string stream to separte the columns
                 while(std::getline(lineStream,cell,',')){
-                    lineLength++;
+                    lineSize++;
                     //I love try catches, that c++ life
                     try{
-                        floatsMap[indexer] = std::stof(cell);
+                        dataMap[indexer] = std::stof(cell);
                         indexer++;
                     }
                     //not so good to just catch all but it'll have to do for now
@@ -50,7 +50,7 @@ int Parser::parse_file(std::string filename, std::chrono::duration<double>* time
             //get the end time
             end = std::chrono::system_clock::now();
 
-            *outLineLegnth = lineLength;
+            this->lineLength = lineSize;
             //do math good
             *time_elapse = end - start;
 
@@ -66,80 +66,19 @@ int Parser::parse_file(std::string filename, std::chrono::duration<double>* time
 
 }
 
-//I think this is what is wanted with the number of entries
-size_t Parser::num_of_entries(){
-    size_t num_entries = 0;
-    //loop through references of each row in the ordered map and get the size
-    for(auto& row : *dataMap){
-        //just use the vector size function to get the number of entries besiseds the filename
-        num_entries += row.second.size();
-
-        //this accounts for the file names that are not counted in the vector size()
-        num_entries++;
-    }
-
-    return num_entries;
-}
 
 //there is a map entry for each line so let the map struct do the actual work.
 // its alot more efficent, smart people wrote that, not just some random kid in comp sci
 // college. Probably some nice person in a basement that is covered with arduinos and doritos.
 size_t Parser::num_of_lines(){
-    return dataMap->size();
+    return nameMap->size();
 }
 
 
-int Parser::find_column_bounds_rowbyrow(){
-    //set up all those holder vars
-    std::chrono::time_point<std::chrono::system_clock> start, end;
-    std::vector<float> holderMax;
-    std::vector<float> holderMin;
 
-    //so we know how many columns there are,
-    // this is assuming that each line has something, dangous ut i'll fix it next iterations
-    size_t size = dataMap->begin()->second.size();
-
-    start = std::chrono::system_clock::now();
-    //go down the columns and find the maxes and mins
-    for(int i = 1; i < size; i++){
-
-        //set min to max for float and max to min for float
-        float colMin = FLT_MAX, colMax = FLT_MIN;
-
-        try{
-            //gotta love the c++11 foreach loop with references
-            for(auto& row : *dataMap){
-                if(row.second.at(i) > colMax){
-                    colMax = row.second.at(i);
-                }
-                if(row.second.at(i) < colMin){
-                    colMin = row.second.at(i);
-                }
-            }
-        }
-        catch(...){
-            std::cerr<<"Not all rows are the same length"<<std::endl;
-            return 0;
-        }
-        //add the maxes and mins to the holder vectors
-        holderMax.push_back(colMax);
-        holderMin.push_back(colMin);
-    }
-    end = std::chrono::system_clock::now();
-
-    std::chrono::duration<double> time_elapse = end - start;
-
-    //print the vectors to and output csv
-    output_vector_to_file("outputfile.csv",holderMin, holderMax);
-
-    std::cout<<"Time to find bounds: "<<time_elapse.count()<<"s\n"<<std::endl;
-    std::cout<<"Output can be found in outputfile.csv for bounds"<<std::endl;
-
-    return 1;
-
-
+long Parser::get_line_length(){
+    return this->lineLength;
 }
-
 
 int Parser::output_vector_to_file(std::string filename, std::vector<float> vec, std::vector<float> vec2){
     std::ofstream outputFile(filename);

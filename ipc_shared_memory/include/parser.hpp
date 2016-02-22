@@ -20,11 +20,11 @@ class Parser{
 
 public:
     //don't have to write out the declaration everytime
-    using MapString_t = std::map<std::string,std::vector<float>>;
+    using MapString_t = std::map<std::string,long>;
 
 
     /// contructor to add the pointer to the map
-    Parser(std::shared_ptr<MapString_t> data):dataMap(data){};
+    Parser(std::shared_ptr<MapString_t> nameMap,float* dataMap):nameMap(nameMap),dataMap(dataMap){};
 
     /// parse the actual contents of the file
     /// \param filename: name of the file to read and parse
@@ -51,10 +51,14 @@ public:
     /// \return: error codes
     int find_column_bounds_rowbyrow();
 
+    long get_line_length();
+
 
 private:
     //store the map of the data
-    std::shared_ptr<MapString_t> dataMap;
+    std::shared_ptr<MapString_t> nameMap;
+    float* dataMap;
+    long lineLength = 0;
 
 
 };
