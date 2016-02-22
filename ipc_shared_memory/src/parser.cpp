@@ -37,7 +37,7 @@ int Parser::parse_file(std::string filename, std::chrono::duration<double>* time
                     lineSize++;
                     //I love try catches, that c++ life
                     try{
-                        dataMap->push_back(std::stof(cell));
+                        dataVector->push_back(std::stof(cell));
                         indexer++;
                     }
                     //not so good to just catch all but it'll have to do for now
