@@ -2,14 +2,19 @@
 
 
 # define ROWMATRIXPOS(rowSize , row, col) (rowSize * row) + col
-
-
+# define LINENUM(rowSize , index) (rowSize / index)
+# define LTOI(rowSize, lineNumber) (lineNumber * rowSize)
 
 
 VectorMatch::VectorMatch(std::shared_ptr<MapString_t> nameMap, float* rawData, long lineLength){
     this->nameMap = nameMap;
-    this->rawData = drawData;
+    this->rawData = rawData;
     this->lineLength = lineLength;
+
+    //create the line number to name map
+    for(pair : name){
+        this->lineNumMap.insert(std::pair<long,std::string>(pair.second,pair.first));
+    }
 }
 
 float VectorMatch::findDist(long start1, long start2){
@@ -82,12 +87,11 @@ int VectorMatch::computVectorMatch(std::string cmpFile, int k, int p,std::chrono
     std::chrono::time_point<std::chrono::system_clock> start, end;
 
 
-    TODO++++++++++++++++++++
-    //get the vector to compare with from the input file
-    std::vector<float>* cmpVec = &(dataMap->at(cmpFile));
+
+    std::vector<float>* cmpVecPos = nameMap->at(cmpFile);
 
     //get the number of lines each proc gets to process
-    int divNum = dataMap->size() / p;
+    int divNum = nameMap->size() / p;
 
 
     //create the shared memeory
@@ -118,33 +122,30 @@ int VectorMatch::computVectorMatch(std::string cmpFile, int k, int p,std::chrono
 
         //this is the child taking over
         else if (pid == 0){
-
+            long lineStatus = 0;
             int procNum = i;
             //store the results of the vector
             std::map<float,int> results;
-            //map iterator to make it seem like random access
-            MapString_t::iterator it = dataMap->begin();
+
 
             int topBound = ((procNum * divNum) + divNum);
             if(i == (p-1)){
-                topBound += dataMap->size() % p;
+                topBound += nameMap->size() % p;
             }
-
-            //advance the iterator to the right line
-            std::advance(it,(procNum*divNum));
 
 
             //get the distances and store them into a map that auto sorts by distance
             for(long j = procNum * divNum; j < topBound -1; j++){
 
                 //add the distance to the results map
-                results.insert(std::pair<float,long>(findDist(cmpVec,&(it->second)),j));
+                results.insert(std::pair<float,long>(findDist(cmpVecPos,LTOI(lineLength, j),j));
 
 
-                //advance the iterator to the next line
-                std::advance(it,1);
+
             }
 
+
+            results.resize(k);
             //add the results to the proper segment of the shared memory
             int count = procNum * k;
 
@@ -194,20 +195,11 @@ int VectorMatch::computVectorMatch(std::string cmpFile, int k, int p,std::chrono
 
 
 
-    //map with the line numbers to names
-    std::map<long,std::string> nameMap;
-
-
-    //get the map from the data
-    //defintily first thing i'm getting rid of in the optimization
-    createMapToLineNumber(&nameMap,dataMap);
-
-
 
     int indexer = 0;
     for(auto elem : finalResultsNum){
         finalResultsName.push_back(nameKeyPair());
-        finalResultsName.at(indexer).filename = nameMap.at(elem.lineNum);
+        finalResultsName.at(indexer).filename = lineNumMap.at(elem.lineNum);
         finalResultsName.at(indexer).dist = elem.dist;
         indexer++;
     }

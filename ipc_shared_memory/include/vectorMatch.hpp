@@ -57,6 +57,7 @@ public:
 private:
     /// pointer to the datamap
     std::shared_ptr<MapString_t> nameMap;
+    std::shared_ptr<std::map<long,std::string>> lineNumMap;
     float* rawData;
     long lineLength = 0;
 
