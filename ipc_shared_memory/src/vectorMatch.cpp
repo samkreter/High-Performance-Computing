@@ -4,6 +4,14 @@
 # define ROWMATRIXPOS(rowSize , row, col) (rowSize * row) + col
 
 
+
+
+VectorMatch::VectorMatch(std::shared_ptr<MapString_t> nameMap, std::shared_ptr<DataVector_t> dataVector, long lineLength){
+    this->nameMap = nameMap;
+    this->dataVector = dataVector;
+    this->lineLength = lineLength;
+}
+
 float VectorMatch::findDist(std::vector<float>* vec1, std::vector<float>* vec2){
 
     int vSize = vec1->size();
