@@ -58,6 +58,7 @@ int main(int argc, char** argv){
 
     shared_ptr<MapString_t> dataMap(new MapString_t);
     Parser p(dataMap);
+    float* dataMap = nullptr;
 
     if(p.parse_file(argv[2],&read_time_elapse)){
          VectorMatch v(dataMap);

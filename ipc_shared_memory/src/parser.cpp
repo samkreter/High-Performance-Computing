@@ -6,8 +6,8 @@ int Parser::parse_file(std::string filename, std::chrono::duration<double>* time
 
     if(!filename.empty()){
 
-        long indexer = 0;
         long lineSize = 0;
+        long indexer = 0;
         //set up the chono vars
         std::chrono::time_point<std::chrono::system_clock> start, end;
         //open the input file
@@ -37,7 +37,7 @@ int Parser::parse_file(std::string filename, std::chrono::duration<double>* time
                     lineSize++;
                     //I love try catches, that c++ life
                     try{
-                        dataMap[indexer] = std::stof(cell);
+                        dataMap->push_back(std::stof(cell));
                         indexer++;
                     }
                     //not so good to just catch all but it'll have to do for now
