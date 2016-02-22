@@ -45,7 +45,7 @@ public:
     /// assing the data pointer to the local struct
     /// \param data: pointer to the data map with the data
     /// \return nothing, it just a poor little constructor
-    VectorMatch(std::shared_ptr<MapString_t> nameMap, std::shared_ptr<DataVector_t> dataVector, long lineLength);
+    VectorMatch(std::shared_ptr<MapString_t> nameMap, float* rawData, long lineLength);
 
     /// Main function that executes the vector comparing
     /// \param cmpFIle: filename that you want to compare to the others
@@ -57,14 +57,11 @@ public:
 private:
     /// pointer to the datamap
     std::shared_ptr<MapString_t> nameMap;
-    std::shared_ptr<DataVector_t> dataVector;
+    float* rawData;
     long lineLength = 0;
 
-    /// find the distance between two veftors with l1 norm
-    /// \param vec1: first vector to compare
-    /// \param vec2: second vector to compare
-    /// \return: the distance of the two vectors
-    float findDist(std::vector<float>* vec1, std::vector<float>* vec2);
+
+    float VectorMatch::findDist(long start1, long start2);
 
 };
 

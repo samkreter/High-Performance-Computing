@@ -6,29 +6,24 @@
 
 
 
-VectorMatch::VectorMatch(std::shared_ptr<MapString_t> nameMap, std::shared_ptr<DataVector_t> dataVector, long lineLength){
+VectorMatch::VectorMatch(std::shared_ptr<MapString_t> nameMap, float* rawData, long lineLength){
     this->nameMap = nameMap;
-    this->dataVector = dataVector;
+    this->rawData = drawData;
     this->lineLength = lineLength;
 }
 
-float VectorMatch::findDist(std::vector<float>* vec1, std::vector<float>* vec2){
+float VectorMatch::findDist(long start1, long start2){
 
-    int vSize = vec1->size();
     float sum = 0;
 
-    //make sure the vectors are the right size
-    if(vSize == vec2->size()){
 
-        //run the l1 norm formula
-        for(int i = 0; i < vSize; i++){
-            sum += std::abs(vec1->at(i) - vec2->at(i));
-        }
-
-        return sum / (float) vSize;
+    //run the l1 norm formula
+    for(int i = 0; i < lineLength; i++){
+        sum += std::abs(rawData[ROWMATRIXPOS(lineLength,start1,i)] - rawData[ROWMATRIXPOS(lineLength,start2,i)]);
     }
-    std::runtime_error("Vectors are not the same size");
-    exit(-1);
+
+    return sum / (float) lineLength;
+
 }
 
 /// print the vectors to a file, for the final output
@@ -86,6 +81,8 @@ int VectorMatch::computVectorMatch(std::string cmpFile, int k, int p,std::chrono
     //start and end for times the proc work
     std::chrono::time_point<std::chrono::system_clock> start, end;
 
+
+    TODO++++++++++++++++++++
     //get the vector to compare with from the input file
     std::vector<float>* cmpVec = &(dataMap->at(cmpFile));
 

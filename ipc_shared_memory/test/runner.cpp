@@ -62,7 +62,7 @@ int main(int argc, char** argv){
 
 
     if(p.parse_file(argv[2],&read_time_elapse)){
-         VectorMatch v(nameMap,dataVector);
+         VectorMatch v(nameMap,dataVector.data());
          v.computVectorMatch(argv[1],k,pNumuser,&read_time_elapse);
 
     }
@@ -79,7 +79,7 @@ int main(int argc, char** argv){
         if(p.parse_file(filename,&read_time_elapse)){
             cout<<"Time to load data struct: "<<read_time_elapse.count()<<"s"<<endl;
 
-            VectorMatch v(nameMap,dataVector);
+            VectorMatch v(nameMap,dataVector.data());
             for(int i = 0; i < procs.size(); i++){
                 chrono::duration<double> proc_time_elapse;
                 cout<<procs.at(i)<<" procs"<<endl;
@@ -114,7 +114,7 @@ int main(int argc, char** argv){
 
         chrono::duration<double> proc_time_elapse;
         if(p.parse_file(inputFileNames.at(i),&read_time_elapse)){
-            VectorMatch v(nameMap,dataVector);
+            VectorMatch v(nameMap,dataVector.data());
             v.computVectorMatch(inputFileFirsts.at(i),100,4,&proc_time_elapse);
             times.push_back(proc_time_elapse.count());
         }
