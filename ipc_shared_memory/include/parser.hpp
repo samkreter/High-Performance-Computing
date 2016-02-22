@@ -24,7 +24,7 @@ public:
 
 
     /// contructor to add the pointer to the map
-    Parser(std::shared_ptr<MapString_t> nameMap,std::vector<float>* dataMap):nameMap(nameMap),dataMap(dataMap){};
+    Parser(std::shared_ptr<MapString_t> nameMap,std::shared_ptr<std::vector<float>> dataMap):nameMap(nameMap),dataMap(dataMap){};
 
     /// parse the actual contents of the file
     /// \param filename: name of the file to read and parse
@@ -57,7 +57,7 @@ public:
 private:
     //store the map of the data
     std::shared_ptr<MapString_t> nameMap;
-    std::vector<float>* dataMap;
+    std::shared_ptr<std::vector<float>> dataMap;
     long lineLength = 0;
 
 

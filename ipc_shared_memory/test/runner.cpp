@@ -5,7 +5,7 @@
 
 using namespace std;
 
-using MapString_t = std::map<std::string,std::vector<float>>;
+using MapString_t = std::map<std::string,long>;
 
 
 
@@ -56,9 +56,10 @@ int main(int argc, char** argv){
         exit(-1);
     }
 
-    shared_ptr<MapString_t> dataMap(new MapString_t);
-    Parser p(dataMap);
-    float* dataMap = nullptr;
+    shared_ptr<MapString_t> nameMap(new MapString_t);
+    shared_ptr<vector<float>> dataMap(new vector<float>);
+    Parser p(nameMap,dataMap);
+
 
     if(p.parse_file(argv[2],&read_time_elapse)){
          VectorMatch v(dataMap);
