@@ -62,7 +62,7 @@ int main(int argc, char** argv){
 
 
     if(p.parse_file(argv[2],&read_time_elapse)){
-         VectorMatch v(dataMap);
+         VectorMatch v(nameMap,dataMap);
          v.computVectorMatch(argv[1],k,pNumuser,&read_time_elapse);
 
     }
@@ -70,16 +70,16 @@ int main(int argc, char** argv){
     cout<<"\noutput was writen to results.csv, thanks and I hope you have a decent day today"<<endl;
 
 //multi proc tests
-#if 0
+#if 1
     {
-        shared_ptr<MapString_t> dataMap(new MapString_t);
-
-        Parser p(dataMap);
+        shared_ptr<MapString_t> nameMap(new MapString_t);
+        shared_ptr<vector<float>> dataMap(new vector<float>);
+        Parser p(nameMap,dataMap);
 
         if(p.parse_file(filename,&read_time_elapse)){
             cout<<"Time to load data struct: "<<read_time_elapse.count()<<"s"<<endl;
 
-            VectorMatch v(dataMap);
+            VectorMatch v(nameMap,dataMap);
             for(int i = 0; i < procs.size(); i++){
                 chrono::duration<double> proc_time_elapse;
                 cout<<procs.at(i)<<" procs"<<endl;
@@ -100,20 +100,21 @@ int main(int argc, char** argv){
 #endif
 
 //multi file tests
-#if 0
+#if 1
 
 
     //clear the times in the vector
     times.clear();
     for(int i = 0; i < inputFileNames.size(); i++){
-        shared_ptr<MapString_t> dataMap(new MapString_t);
 
-        Parser p(dataMap);
+        shared_ptr<MapString_t> nameMap(new MapString_t);
+        shared_ptr<vector<float>> dataMap(new vector<float>);
+        Parser p(nameMap,dataMap);
 
 
         chrono::duration<double> proc_time_elapse;
         if(p.parse_file(inputFileNames.at(i),&read_time_elapse)){
-            VectorMatch v(dataMap);
+            VectorMatch v(nameMap,dataMap);
             v.computVectorMatch(inputFileFirsts.at(i),100,4,&proc_time_elapse);
             times.push_back(proc_time_elapse.count());
         }
