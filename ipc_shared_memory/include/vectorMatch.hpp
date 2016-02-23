@@ -13,6 +13,7 @@
 #include <fstream>
 #include <sstream>
 #include <cfloat>
+#include <exception>
 
 
 //sys ipc stuff, you know the real stuff

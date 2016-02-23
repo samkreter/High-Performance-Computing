@@ -12,7 +12,7 @@ dataMultiFIle = np.genfromtxt('multiFile.csv',delimiter=',')
 
 plt.plot(data[0], data[1], 'ro-')
 
-plt.axis([0, 20, 0, 1.5])
+plt.axis([0, 20, 0, .1])
 
 plt.xlabel('Number of Procs')
 plt.ylabel('Time to Process')
@@ -30,4 +30,4 @@ plt.grid(True)
 fig2 = plt.gcf()
 fig2.savefig('../figs/multiFile.png')
 
-plt.show()
+#plt.show()

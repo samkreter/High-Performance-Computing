@@ -3,7 +3,7 @@
 
 # define ROWMATRIXPOS(rowSize , row, col) (rowSize * row) + col
 # define LINENUM(rowSize , index) (rowSize / index)
-# define LTOI(rowSize, lineNumber) (lineNumber * rowSize)
+
 
 
 VectorMatch::VectorMatch(std::shared_ptr<MapString_t> nameMap, float* rawData, long lineLength){
@@ -19,15 +19,14 @@ VectorMatch::VectorMatch(std::shared_ptr<MapString_t> nameMap, float* rawData, l
 }
 
 float VectorMatch::findDist(long start1, long start2){
-    std::cout<<"testing";
-    float sum = 0;
 
+    float sum = 0;
 
     //run the l1 norm formula
     for(int i = 0; i < lineLength; i++){
-        sum += std::abs(rawData[ROWMATRIXPOS(lineLength,start1,i)] - rawData[ROWMATRIXPOS(lineLength,start2,i)]);
-    }
 
+        sum += std::abs(rawData[(start1+i)] - rawData[ROWMATRIXPOS(lineLength,start2,i)]);
+    }
 
     return sum / (float) lineLength;
 
@@ -141,34 +140,35 @@ int VectorMatch::computVectorMatch(std::string cmpFile, int k, int p,std::chrono
                 topBound += nameMap->size() % p;
             }
 
-            std::cout<<"topboud: "<<topBound<<"j: "<<procNum*divNum;
 
             //get the distances and store them into a map that auto sorts by distance
             for(long j = procNum * divNum; j < topBound -1; j++){
-
-
                 //add the distance to the results map
-                results.insert(std::pair<float,long>(findDist(cmpVecPos,LTOI(lineLength,j)),j));
+                results.insert(std::pair<float,long>(findDist(cmpVecPos,j),j*lineLength));
 
 
             }
 
-            if(results.size() > k){
-                std::cerr<<"the results var is greater than the k size"<<std::endl;
-            }
+
 
             //add the results to the proper segment of the shared memory
             int count = procNum * k;
+            int kcount = 0;
 
             for(auto& pair : results){
+                if(kcount >= k){
+                    break;
+                }
                 shm[count].dist = pair.first;
                 shm[count].lineNum = pair.second;
                 count++;
+                kcount++;
             }
+
 
             //not usre if this is going to work but lets try
             //zero out the contents
-            for(;count <= k; count++){
+            for(;count <= ((procNum*k)+k); count++){
                 shm[count].dist = FLT_MAX;
             }
 
@@ -182,13 +182,67 @@ int VectorMatch::computVectorMatch(std::string cmpFile, int k, int p,std::chrono
         }
     }
 
+//for making sure the chilren exite good
+#if 0
+    int status; // catch the status of the child
+
+    do  // in reality, mulptiple signals or exit status could come from the child
+    {
+
+        pid_t w = waitpid(pid, &status, WUNTRACED | WCONTINUED);
+        if (w == -1)
+        {
+            std::cerr << "Error waiting for child process ("<< pid <<")" << std::endl;
+            break;
+        }
+
+        if (WIFEXITED(status))
+        {
+            if (status > 0)
+            {
+                std::cerr << "Child process ("<< pid <<") exited with non-zero status of " << WEXITSTATUS(status) << std::endl;
+                continue;
+            }
+            else
+            {
+                std::cout << "Child process ("<< pid <<") exited with status of " << WEXITSTATUS(status) << std::endl;
+                continue;
+            }
+        }
+        else if (WIFSIGNALED(status))
+        {
+            std::cout << "Child process ("<< pid <<") killed by signal (" << WTERMSIG(status) << ")" << std::endl;
+            continue;
+        }
+        else if (WIFSTOPPED(status))
+        {
+            std::cout << "Child process ("<< pid <<") stopped by signal (" << WSTOPSIG(status) << ")" << std::endl;
+            continue;
+        }
+        else if (WIFCONTINUED(status))
+        {
+            std::cout << "Child process ("<< pid <<") continued" << std::endl;
+            continue;
+        }
+    }
+    while (!WIFEXITED(status) && !WIFSIGNALED(status));
+
+#endif
+
+
+
 
     int status;
+    pid_t testing = 0;
     //wait for all the child procs to finish
     for(int i = 0; i < p; i++){
         //probably not enough checks for the procs waiting but
         // i'll come back later and fix it
-        waitpid(minvan.at(i),&status, 0);
+        do{
+            testing = waitpid(minvan.at(i),&status, 0);
+
+        }while (!WIFEXITED(status) && !WIFSIGNALED(status));
+
     }
 
 
@@ -209,6 +263,7 @@ int VectorMatch::computVectorMatch(std::string cmpFile, int k, int p,std::chrono
 
     int indexer = 0;
     for(auto elem : finalResultsNum){
+        // std::cout<<elem.lineNum<<" ";
         finalResultsName.push_back(nameKeyPair());
         finalResultsName.at(indexer).filename = (*lineNumMap).at(elem.lineNum);
         finalResultsName.at(indexer).dist = elem.dist;
@@ -222,7 +277,11 @@ int VectorMatch::computVectorMatch(std::string cmpFile, int k, int p,std::chrono
     end = std::chrono::system_clock::now();
 
     //get the output out to that csv, yea
-    output_vector_to_file("results.csv",&finalResultsName);
+
+    std::string filename("results");
+    filename.append(std::to_string(p));
+    filename.append(".csv");
+    output_vector_to_file(filename,&finalResultsName);
 
     *time_elapse = end - start;
 
