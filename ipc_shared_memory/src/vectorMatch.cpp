@@ -278,10 +278,8 @@ int VectorMatch::computVectorMatch(std::string cmpFile, int k, int p,std::chrono
 
     //get the output out to that csv, yea
 
-    std::string filename("results");
-    filename.append(std::to_string(p));
-    filename.append(".csv");
-    output_vector_to_file(filename,&finalResultsName);
+
+    output_vector_to_file("results.csv",&finalResultsName);
 
     *time_elapse = end - start;
 

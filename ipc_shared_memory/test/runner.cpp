@@ -103,7 +103,7 @@ int main(int argc, char** argv){
 #endif
 
 //multi file tests
-#if 0
+#if 1
 
 
     //clear the times in the vector
