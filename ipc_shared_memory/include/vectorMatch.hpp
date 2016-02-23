@@ -28,6 +28,7 @@ class VectorMatch{
 public:
     //I really don't want to write this 1000 times, so thank you c++ typedef
     using MapString_t = std::map<std::string,long>;
+    using InvMapString_t = std::map<long,std::string>;
     using DataVector_t = std::vector<float>;
 
     //store the pairs in shared memory
@@ -57,12 +58,12 @@ public:
 private:
     /// pointer to the datamap
     std::shared_ptr<MapString_t> nameMap;
-    std::shared_ptr<std::map<long,std::string>> lineNumMap;
+    std::shared_ptr<InvMapString_t> lineNumMap = std::shared_ptr<InvMapString_t>(new InvMapString_t);
     float* rawData;
     long lineLength = 0;
 
 
-    float VectorMatch::findDist(long start1, long start2);
+    float findDist(long start1, long start2);
 
 };
 

@@ -12,9 +12,10 @@ VectorMatch::VectorMatch(std::shared_ptr<MapString_t> nameMap, float* rawData, l
     this->lineLength = lineLength;
 
     //create the line number to name map
-    for(pair : name){
-        this->lineNumMap.insert(std::pair<long,std::string>(pair.second,pair.first));
+    for(auto& pair : *(this->nameMap)){
+        (*lineNumMap).insert(std::pair<long,std::string>(pair.second,pair.first));
     }
+
 }
 
 float VectorMatch::findDist(long start1, long start2){
@@ -24,6 +25,7 @@ float VectorMatch::findDist(long start1, long start2){
 
     //run the l1 norm formula
     for(int i = 0; i < lineLength; i++){
+
         sum += std::abs(rawData[ROWMATRIXPOS(lineLength,start1,i)] - rawData[ROWMATRIXPOS(lineLength,start2,i)]);
     }
 
@@ -73,6 +75,7 @@ int createMapToLineNumber(std::map<long, std::string>* newMap, std::shared_ptr<V
 
 int VectorMatch::computVectorMatch(std::string cmpFile, int k, int p,std::chrono::duration<double>* time_elapse){
 
+
     //get all that shared mem stuff set up
     int shmId;          // ID of shared memory segment
     key_t shmKey = 123460;      // key to pass to shmget(), key_t is an IPC key type defined in sys/types
@@ -88,7 +91,9 @@ int VectorMatch::computVectorMatch(std::string cmpFile, int k, int p,std::chrono
 
 
 
-    std::vector<float>* cmpVecPos = nameMap->at(cmpFile);
+    long cmpVecPos = nameMap->at(cmpFile);
+
+
 
     //get the number of lines each proc gets to process
     int divNum = nameMap->size() / p;
@@ -133,19 +138,22 @@ int VectorMatch::computVectorMatch(std::string cmpFile, int k, int p,std::chrono
                 topBound += nameMap->size() % p;
             }
 
+            std::cout<<"topboud: "<<topBound<<"j: "<<procNum*divNum;
 
             //get the distances and store them into a map that auto sorts by distance
             for(long j = procNum * divNum; j < topBound -1; j++){
 
-                //add the distance to the results map
-                results.insert(std::pair<float,long>(findDist(cmpVecPos,LTOI(lineLength, j),j));
 
+                //add the distance to the results map
+                results.insert(std::pair<float,long>(findDist(cmpVecPos,LTOI(lineLength,j)),j));
 
 
             }
 
+            if(results.size() > k){
+                std::cerr<<"the results var is greater than the k size"<<std::endl;
+            }
 
-            results.resize(k);
             //add the results to the proper segment of the shared memory
             int count = procNum * k;
 
@@ -199,7 +207,7 @@ int VectorMatch::computVectorMatch(std::string cmpFile, int k, int p,std::chrono
     int indexer = 0;
     for(auto elem : finalResultsNum){
         finalResultsName.push_back(nameKeyPair());
-        finalResultsName.at(indexer).filename = lineNumMap.at(elem.lineNum);
+        finalResultsName.at(indexer).filename = (*lineNumMap).at(elem.lineNum);
         finalResultsName.at(indexer).dist = elem.dist;
         indexer++;
     }
