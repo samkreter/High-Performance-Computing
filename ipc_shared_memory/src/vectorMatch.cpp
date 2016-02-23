@@ -19,15 +19,15 @@ VectorMatch::VectorMatch(std::shared_ptr<MapString_t> nameMap, float* rawData, l
 }
 
 float VectorMatch::findDist(long start1, long start2){
-
+    std::cout<<"testing";
     float sum = 0;
 
 
     //run the l1 norm formula
     for(int i = 0; i < lineLength; i++){
-
         sum += std::abs(rawData[ROWMATRIXPOS(lineLength,start1,i)] - rawData[ROWMATRIXPOS(lineLength,start2,i)]);
     }
+
 
     return sum / (float) lineLength;
 
@@ -86,6 +86,7 @@ int VectorMatch::computVectorMatch(std::string cmpFile, int k, int p,std::chrono
     //store the pids for the procs
     std::vector<pid_t> minvan;
 
+
     //start and end for times the proc work
     std::chrono::time_point<std::chrono::system_clock> start, end;
 
@@ -127,6 +128,8 @@ int VectorMatch::computVectorMatch(std::string cmpFile, int k, int p,std::chrono
 
         //this is the child taking over
         else if (pid == 0){
+
+
             long lineStatus = 0;
             int procNum = i;
             //store the results of the vector
