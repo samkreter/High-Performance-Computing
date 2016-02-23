@@ -12,7 +12,7 @@ dataMultiFIle = np.genfromtxt('multiFile.csv',delimiter=',')
 
 plt.plot(data[0], data[1], 'ro-')
 
-plt.axis([0, 20, 0, .1])
+plt.axis([0, 20, 0, .3])
 
 plt.xlabel('Number of Procs')
 plt.ylabel('Time to Process')
