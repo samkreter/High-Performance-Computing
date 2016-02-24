@@ -1,6 +1,7 @@
 #include "../include/vectorMatch.hpp"
 
 
+//simle converstion for the array indxing to real index
 # define ROWMATRIXPOS(rowSize , row, col) (rowSize * row) + col
 # define LINENUM(rowSize , index) (rowSize / index)
 

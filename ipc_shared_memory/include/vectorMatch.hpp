@@ -64,7 +64,7 @@ private:
     float* rawData;
     long lineLength = 0;
 
-
+    /// finds the distance with two vectors with their startin gpoints
     float findDist(long start1, long start2);
 
 };

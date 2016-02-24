@@ -14,17 +14,18 @@ int output_vector_to_file(std::string filename, std::vector<double> vec, int app
 int main(int argc, char** argv){
 
 
-
+    //set up for the number of process
     vector<double> procs{1, 2, 4, 6, 8, 12, 16};
     vector<double> times;
 
-
+    //just set up vars for the run trhoughs
     vector<string> inputFileNames;
     inputFileNames.push_back("../../../2100_HPC.csv");
     inputFileNames.push_back("../../../4200_HPC.csv");
     inputFileNames.push_back("../../../6300_HPC.csv");
     inputFileNames.push_back("../../../8400_HPC.csv");
 
+    //you know just more set up stuff
     vector<string> inputFileFirsts;
     inputFileFirsts.push_back("agricultural/agricultural00.tif");
     inputFileFirsts.push_back("agricultural/agricultural00_rot_000.tif");
@@ -34,9 +35,7 @@ int main(int argc, char** argv){
     chrono::duration<double> read_time_elapse;
 
     string filename("../../../6300_HPC.csv");
-    //have to remeber to free it from the heap
-    // cout<<"Please enter the file path relative to this execting program, for example '../test/HPC_DATA.csv': ";
-    // cin>>filename;
+
 
 
 #if 1
@@ -71,7 +70,8 @@ int main(int argc, char** argv){
     #endif
 
 
-//multi proc tests
+//multi proc tests - only works if you change the above file locatoins to show
+    //where the files are
 #if 0
     {
         shared_ptr<MapString_t> nameMap(new MapString_t);
@@ -103,7 +103,8 @@ int main(int argc, char** argv){
 
 #endif
 
-//multi file tests
+//multi file tests - only works if you change the above file locatoins to show
+    //where the files are
 #if 0
 
 
