@@ -25,7 +25,7 @@ float VectorMatch::findDist(long start1, long start2){
     //run the l1 norm formula
     for(int i = 0; i < lineLength; i++){
 
-        sum += std::abs(rawData[(start1+i)] - rawData[ROWMATRIXPOS(lineLength,start2,i)]);
+        sum += std::fabs(rawData[(start1+i)] - rawData[ROWMATRIXPOS(lineLength,start2,i)]);
     }
 
     return sum / (float) lineLength;
@@ -83,7 +83,7 @@ int VectorMatch::computVectorMatch(std::string cmpFile, int k, int p,std::chrono
     unsigned long * sharedIndexPtr = NULL;
 
     //store the pids for the procs
-    std::vector<pid_t> minvan;
+    std::set<pid_t> minvan;
 
 
     //start and end for times the proc work
@@ -178,7 +178,7 @@ int VectorMatch::computVectorMatch(std::string cmpFile, int k, int p,std::chrono
         }
         //parent
         else{
-            minvan.push_back(pid);
+            minvan.insert(pid);
         }
     }
 
@@ -233,16 +233,17 @@ int VectorMatch::computVectorMatch(std::string cmpFile, int k, int p,std::chrono
 
 
     int status;
-    pid_t testing = 0;
+    pid_t testingProc = 0;
     //wait for all the child procs to finish
-    for(int i = 0; i < p; i++){
+    while(!minvan.empty()){
         //probably not enough checks for the procs waiting but
         // i'll come back later and fix it
         do{
-            testing = waitpid(minvan.at(i),&status, 0);
+            testingProc = wait(&status);
 
         }while (!WIFEXITED(status) && !WIFSIGNALED(status));
 
+        minvan.erase(testingProc);
     }
 
 

@@ -14,6 +14,7 @@
 #include <sstream>
 #include <cfloat>
 #include <exception>
+#include <set>
 
 
 //sys ipc stuff, you know the real stuff
