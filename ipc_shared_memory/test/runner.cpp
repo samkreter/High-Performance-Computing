@@ -9,13 +9,13 @@ using MapString_t = std::map<std::string,long>;
 
 
 
-int output_vector_to_file(std::string filename, std::vector<int> vec, std::vector<double> vec2);
+int output_vector_to_file(std::string filename, std::vector<double> vec, int append);
 
 int main(int argc, char** argv){
 
 
 
-    vector<int> procs{1, 2, 4, 6, 8, 12, 16};
+    vector<double> procs{1, 2, 4, 6, 8, 12, 16};
     vector<double> times;
 
 
@@ -94,7 +94,8 @@ int main(int argc, char** argv){
             }
 
             //write the times to a file
-            output_vector_to_file("test.csv",procs,times);
+            output_vector_to_file("test.csv",procs,0);
+            output_vector_to_file("test.csv",times,1);
 
 
         }
@@ -108,6 +109,7 @@ int main(int argc, char** argv){
 
     //clear the times in the vector
     times.clear();
+    vector<double> fileReadTimes;
     for(int i = 0; i < inputFileNames.size(); i++){
 
         shared_ptr<MapString_t> nameMap(new MapString_t);
@@ -117,6 +119,7 @@ int main(int argc, char** argv){
 
         chrono::duration<double> proc_time_elapse;
         if(p.parse_file(inputFileNames.at(i),&read_time_elapse)){
+            fileReadTimes.push_back(read_time_elapse.count());
             VectorMatch v(nameMap,(*dataVector).data(),p.get_line_length());
             v.computVectorMatch(inputFileFirsts.at(i),100,4,&proc_time_elapse);
             times.push_back(proc_time_elapse.count());
@@ -127,13 +130,15 @@ int main(int argc, char** argv){
         }
     }
 
-    vector<int> inputNums;
+    vector<double> inputNums;
     inputNums.push_back(2100);
     inputNums.push_back(4200);
     inputNums.push_back(6300);
     inputNums.push_back(8400);
 
-    output_vector_to_file("multiFile.csv",inputNums,times);
+    output_vector_to_file("multiFile.csv",inputNums,0);
+    output_vector_to_file("multiFile.csv",times,1);
+    output_vector_to_file("multiFile.csv",fileReadTimes,1);
 
 #endif
     //run python scripts for graphing
@@ -146,9 +151,16 @@ int main(int argc, char** argv){
 
 
 
-int output_vector_to_file(std::string filename, std::vector<int> vec, std::vector<double> vec2){
-    std::ofstream outputFile(filename);
-    std::ostringstream ossVec, ossVec2;
+int output_vector_to_file(std::string filename, std::vector<double> vec, int append){
+    std::fstream outputFile;
+    std::ostringstream ossVec;
+
+    if(append == 0){
+        outputFile.open(filename,std::fstream::out);
+    }
+    else{
+        outputFile.open(filename, std::fstream::out | std::fstream::app);
+    }
 
     if(outputFile.is_open()){
 
@@ -156,12 +168,6 @@ int output_vector_to_file(std::string filename, std::vector<int> vec, std::vecto
         std::ostream_iterator<float>(ossVec, ","));
         ossVec << vec.back();
         outputFile<<ossVec.str()<<"\n";
-
-        std::copy(vec2.begin(), vec2.end()-1,
-        std::ostream_iterator<float>(ossVec2, ","));
-        ossVec2 << vec2.back();
-        outputFile<<ossVec2.str()<<"\n";
-
 
         outputFile.close();
         return 1;

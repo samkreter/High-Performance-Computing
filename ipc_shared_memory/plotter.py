@@ -24,11 +24,23 @@ plt.show()
 
 plt.plot(dataMultiFIle[0],dataMultiFIle[1],'ro-')
 
+
+
 plt.xlabel('Number of lines in file')
 plt.ylabel('Time to Process')
 plt.axis([2000, 9000, 0, .45])
 plt.grid(True)
 fig2 = plt.gcf()
 fig2.savefig('../figs/multiFile.png')
+plt.show()
+
+
+plt.plot(dataMultiFIle[0],dataMultiFIle[2],'go-')
+plt.xlabel('Number of lines in file')
+plt.ylabel('Time to Process')
+plt.axis([2000, 9000, 0, 5])
+plt.grid(True)
+fig3 = plt.gcf()
+fig3.savefig('../figs/multiFileLoadTimes.png')
 
 plt.show()
