@@ -90,8 +90,15 @@ int VectorMatch::computVectorMatch(std::string cmpFile, int k, int p,std::chrono
     std::chrono::time_point<std::chrono::system_clock> start, end;
 
 
+    long cmpVecPos = 0;
 
-    long cmpVecPos = nameMap->at(cmpFile);
+    try{
+        cmpVecPos = nameMap->at(cmpFile);
+    }
+    catch(...){
+        std::cerr<<"File not found in the database for comapring\n";
+        return 0;
+    }
 
 
 

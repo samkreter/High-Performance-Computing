@@ -39,7 +39,7 @@ int main(int argc, char** argv){
     // cin>>filename;
 
 
-#if 0
+#if 1
     if(argc != 5){
         cerr<<"Arguments not correct, <query/_filename_line_to_match> <dataFile> <K> <P>"<<endl;
         exit(-1);
@@ -62,17 +62,17 @@ int main(int argc, char** argv){
 
 
     if(p.parse_file(argv[2],&read_time_elapse)){
-         VectorMatch v(nameMap,(*dataVector).data(),p.get_line_length());
-         v.computVectorMatch(argv[1],k,pNumuser,&read_time_elapse);
-
+        VectorMatch v(nameMap,(*dataVector).data(),p.get_line_length());
+        if(v.computVectorMatch(argv[1],k,pNumuser,&read_time_elapse)){
+            cout<<"\noutput was writen to results.csv, thanks and I hope you have a decent day today"<<endl;
+        }
     }
 
-    cout<<"\noutput was writen to results.csv, thanks and I hope you have a decent day today"<<endl;
-#endif
+    #endif
 
 
 //multi proc tests
-#if 1
+#if 0
     {
         shared_ptr<MapString_t> nameMap(new MapString_t);
         shared_ptr<vector<float>> dataVector(new vector<float>);
@@ -104,7 +104,7 @@ int main(int argc, char** argv){
 #endif
 
 //multi file tests
-#if 1
+#if 0
 
 
     //clear the times in the vector
@@ -142,7 +142,7 @@ int main(int argc, char** argv){
 
 #endif
     //run python scripts for graphing
-    cout<<"system output: "<<system("python ../plotter.py");
+    //cout<<"system output: "<<system("python ../plotter.py");
 
 
     return 0;
