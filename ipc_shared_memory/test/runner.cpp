@@ -63,7 +63,7 @@ int main(int argc, char** argv){
     if(p.parse_file(argv[2],&read_time_elapse)){
         VectorMatch v(nameMap,(*dataVector).data(),p.get_line_length());
         if(v.computVectorMatch(argv[1],k,pNumuser,&read_time_elapse)){
-            cout<<"\noutput was writen to results.csv, thanks and I hope you have a decent day today"<<endl;
+            cout<<"\noutput was writen to results.csv, thanks and have a great day."<<endl;
         }
     }
 
