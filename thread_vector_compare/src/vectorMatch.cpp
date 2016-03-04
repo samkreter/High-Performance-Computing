@@ -109,7 +109,7 @@ int VectorMatch::computVectorMatch(std::string cmpFile, int k, int p,std::chrono
     //this loops through and forks enough procs to process each file
     // 1 proc per file
     for(int i = 0; i < p; i++){
-        t[i] = std::thread(&VectorMatch::threadWork,k, p, cmpVecPos, divNum, i, mainStore);
+        t[i] = std::thread(&VectorMatch::threadWork,k, p, cmpVecPos, divNum, i, `mainStore);
 
     }
 
