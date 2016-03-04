@@ -98,7 +98,7 @@ int VectorMatch::computVectorMatch(std::string cmpFile, int k, int p,std::chrono
 
 
     //create the main store for the threads to put their results
-    storeKeyPair* mainStore = new[(p * k * sizeof(storeKeyPair))] storeKeyPair;
+    storeKeyPair* mainStore = new storeKeyPair[p * k ];
 
 
 
@@ -108,7 +108,7 @@ int VectorMatch::computVectorMatch(std::string cmpFile, int k, int p,std::chrono
     // 1 proc per file
     for(int i = 0; i < p; i++){
 
-            return threadWork(k, p, cmpVecPos, divNum, i, mainStore);
+            threadWork(k, p, cmpVecPos, divNum, i, mainStore);
 
     }
 
@@ -154,13 +154,13 @@ int VectorMatch::computVectorMatch(std::string cmpFile, int k, int p,std::chrono
 
     std::cout<<"Time for parent processing: "<<(*time_elapse).count()<<std::endl;
 
-    
+
 
     return 1;
 
 }
 
-int VectorMatch::threadWork(int k, int p, long cmpVecPos, int divNum, int i,storeKeyPair* mainStore) {
+void VectorMatch::threadWork(int k, int p, long cmpVecPos, int divNum, int i,storeKeyPair* mainStore) {
     long lineStatus = 0;
     int procNum = i;
 
@@ -177,7 +177,7 @@ int VectorMatch::threadWork(int k, int p, long cmpVecPos, int divNum, int i,stor
     //get the distances and store them into a map that auto sorts by distance
     for(long j = procNum * divNum; j < topBound -1; j++){
         //add the distance to the results map
-        results.insert(std::pair(findDist(cmpVecPos, j), j * this->lineLength));
+        results.insert(std::pair<float,int>(findDist(cmpVecPos, j), j * this->lineLength));
 
     }
 
@@ -203,6 +203,7 @@ int VectorMatch::threadWork(int k, int p, long cmpVecPos, int divNum, int i,stor
     for(;count <= ((procNum*k)+k); count++){
         mainStore[count].dist = FLT_MAX;
     }
+
 
 }
 

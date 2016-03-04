@@ -22,19 +22,19 @@ int main(int argc, char** argv){
     vector<string> inputFileNames;
     inputFileNames.push_back("../../../2100_HPC.csv");
     inputFileNames.push_back("../../../4200_HPC.csv");
-    inputFileNames.push_back("../../../6300_HPC.csv");
-    inputFileNames.push_back("../../../8400_HPC.csv");
+//    inputFileNames.push_back("../../../6300_HPC.csv");
+//    inputFileNames.push_back("../../../8400_HPC.csv");
 
     //you know just more set up stuff
     vector<string> inputFileFirsts;
     inputFileFirsts.push_back("agricultural/agricultural00.tif");
     inputFileFirsts.push_back("agricultural/agricultural00_rot_000.tif");
-    inputFileFirsts.push_back("agricultural/agricultural00_rot_090.tif");
-    inputFileFirsts.push_back("agricultural/agricultural00_rot_000.tif");
+//    inputFileFirsts.push_back("agricultural/agricultural00_rot_090.tif");
+//    inputFileFirsts.push_back("agricultural/agricultural00_rot_000.tif");
 
     chrono::duration<double> read_time_elapse;
 
-    string filename("../../../6300_HPC.csv");
+    string filename("../../../2100_HPC.csv");
 
 
 
@@ -86,8 +86,8 @@ int main(int argc, char** argv){
             for(int i = 0; i < procs.size(); i++){
                 chrono::duration<double> proc_time_elapse;
                 cout<<procs.at(i)<<" procs"<<endl;
-                v.computVectorMatch("agricultural/agricultural00_rot_090.tif",100,procs.at(i),&proc_time_elapse);
-                //v.computVectorMatch("agricultural/agricultural00_rot_000.tif",100,procs.at(i),&proc_time_elapse);
+                //v.computVectorMatch("agricultural/agricultural00_rot_090.tif",100,procs.at(i),&proc_time_elapse);
+                v.computVectorMatch("agricultural/agricultural00_rot_000.tif",100,procs.at(i),&proc_time_elapse);
                 //v.computVectorMatch("agricultural/agricultural00.tif",100,procs.at(i),&proc_time_elapse);
                 times.push_back(proc_time_elapse.count());
                 cout<<endl<<endl;

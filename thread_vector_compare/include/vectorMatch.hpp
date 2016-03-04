@@ -68,7 +68,7 @@ private:
     /// finds the distance with two vectors with their startin gpoints
     float findDist(long start1, long start2);
 
-    int threadWork(int k, int p, long cmpVecPos, int divNum, int i,storeKeyPair* mainStore);
+    void threadWork(int k, int p, long cmpVecPos, int divNum, int i,storeKeyPair* mainStore);
 
 };
 
