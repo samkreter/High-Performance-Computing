@@ -56,7 +56,7 @@ int output_vector_to_file(std::string filename, std::vector<VectorMatch::nameKey
 
 
 //just a helper function for the sort with my custom structs
-bool shmKeyPairSort(const VectorMatch::shmKeyPair& pair1, const VectorMatch::shmKeyPair& pair2){
+bool shmKeyPairSort(const VectorMatch::storeKeyPair& pair1, const VectorMatch::storeKeyPair& pair2){
     return pair1.dist < pair2.dist;
 }
 
@@ -76,16 +76,6 @@ int createMapToLineNumber(std::map<long, std::string>* newMap, std::shared_ptr<V
 int VectorMatch::computVectorMatch(std::string cmpFile, int k, int p,std::chrono::duration<double>* time_elapse){
 
 
-    //get all that shared mem stuff set up
-    int shmId;          // ID of shared memory segment
-    key_t shmKey = 123460;      // key to pass to shmget(), key_t is an IPC key type defined in sys/types
-    int shmFlag = IPC_CREAT | 0666; // Flag to create with rw permissions
-    pid_t pid;
-    unsigned long * sharedIndexPtr = NULL;
-
-    //store the pids for the procs
-    std::set<pid_t> minvan;
-
 
     //start and end for times the proc work
     std::chrono::time_point<std::chrono::system_clock> start, end;
@@ -104,11 +94,11 @@ int VectorMatch::computVectorMatch(std::string cmpFile, int k, int p,std::chrono
 
 
     //get the number of lines each proc gets to process
-    int divNum = nameMap->size() / p;
+    int divNum = (int) (nameMap->size() / p);
 
 
     //create the main store for the threads to put their results
-    shmKeyPair* mainStore = new[(p * k * sizeof(shmKeyPair))] shmKeyPair;
+    storeKeyPair* mainStore = new[(p * k * sizeof(storeKeyPair))] storeKeyPair;
 
 
 
@@ -117,94 +107,16 @@ int VectorMatch::computVectorMatch(std::string cmpFile, int k, int p,std::chrono
     //this loops through and forks enough procs to process each file
     // 1 proc per file
     for(int i = 0; i < p; i++){
-        pid = fork();
 
-        if ( pid < 0 ){
-            std::cerr << "Could not fork!!! ("<< pid <<")" << std::endl;
-            return -1;
-        }
+            return threadWork(k, p, cmpVecPos, divNum, i, mainStore);
 
-        //this is the child taking over
-        else if (pid == 0){
-
-
-            return threadWork(k, p, cmpVecPos, divNum, i);
-
-
-        }
-        //parent
-        else{
-            minvan.insert(pid);
-        }
     }
 
-//for making sure the chilren exite good
-#if 0
-    int status; // catch the status of the child
 
-    do  // in reality, mulptiple signals or exit status could come from the child
-    {
-
-        pid_t w = waitpid(pid, &status, WUNTRACED | WCONTINUED);
-        if (w == -1)
-        {
-            std::cerr << "Error waiting for child process ("<< pid <<")" << std::endl;
-            break;
-        }
-
-        if (WIFEXITED(status))
-        {
-            if (status > 0)
-            {
-                std::cerr << "Child process ("<< pid <<") exited with non-zero status of " << WEXITSTATUS(status) << std::endl;
-                continue;
-            }
-            else
-            {
-                std::cout << "Child process ("<< pid <<") exited with status of " << WEXITSTATUS(status) << std::endl;
-                continue;
-            }
-        }
-        else if (WIFSIGNALED(status))
-        {
-            std::cout << "Child process ("<< pid <<") killed by signal (" << WTERMSIG(status) << ")" << std::endl;
-            continue;
-        }
-        else if (WIFSTOPPED(status))
-        {
-            std::cout << "Child process ("<< pid <<") stopped by signal (" << WSTOPSIG(status) << ")" << std::endl;
-            continue;
-        }
-        else if (WIFCONTINUED(status))
-        {
-            std::cout << "Child process ("<< pid <<") continued" << std::endl;
-            continue;
-        }
-    }
-    while (!WIFEXITED(status) && !WIFSIGNALED(status));
-
-#endif
-
-
-
-
-    int status;
-    pid_t testingProc = 0;
-    //wait for all the child procs to finish
-    while(!minvan.empty()){
-        //probably not enough checks for the procs waiting but
-        // i'll come back later and fix it
-        do{
-            testingProc = wait(&status);
-
-        }while (!WIFEXITED(status) && !WIFSIGNALED(status));
-
-        minvan.erase(testingProc);
-    }
 
 
     //store the final results with line numbers
-    std::vector<shmKeyPair> finalResultsNum(shm,shm+(k*p));
+    std::vector<storeKeyPair> finalResultsNum(mainStore,mainStore+(k*p));
 
     //hold the final filname matches
     std::vector<nameKeyPair> finalResultsName(k);
@@ -254,7 +166,7 @@ int VectorMatch::computVectorMatch(std::string cmpFile, int k, int p,std::chrono
 
 }
 
-int VectorMatch::threadWork(int k, int p, long cmpVecPos, int divNum, int i) {
+int VectorMatch::threadWork(int k, int p, long cmpVecPos, int divNum, int i,storeKeyPair* mainStore) {
     long lineStatus = 0;
     int procNum = i;
     //store the results of the vector
@@ -297,7 +209,7 @@ int VectorMatch::threadWork(int k, int p, long cmpVecPos, int divNum, int i) {
     for(;count <= ((procNum*k)+k); count++){
                 shm[count].dist = FLT_MAX;
             }
-    
+
 }
 
 

@@ -35,7 +35,7 @@ public:
     using DataVector_t = std::vector<float>;
 
     //store the pairs in shared memory
-    using shmKeyPair = struct{
+    using storeKeyPair = struct{
         float dist;
         long lineNum;
     };
@@ -68,7 +68,7 @@ private:
     /// finds the distance with two vectors with their startin gpoints
     float findDist(long start1, long start2);
 
-    int threadWork(int k, int p, long cmpVecPos, int divNum, int i);
+    int threadWork(int k, int p, long cmpVecPos, int divNum, int i,storeKeyPair* mainStore);
 
 };
 
