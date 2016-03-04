@@ -144,7 +144,7 @@ int main(int argc, char** argv){
 #endif
 
     //run python scripts for graphing
-    //cout<<"system output: "<<system("python ../plotter.py");
+    cout<<"system output: "<<system("python ../plotter.py");
 
 
     return 0;
