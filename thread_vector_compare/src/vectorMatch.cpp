@@ -104,15 +104,19 @@ int VectorMatch::computVectorMatch(std::string cmpFile, int k, int p,std::chrono
 
 
     start = std::chrono::system_clock::now();
+    std::thread* t = new std::thread[p];
+
     //this loops through and forks enough procs to process each file
     // 1 proc per file
     for(int i = 0; i < p; i++){
-
-            threadWork(k, p, cmpVecPos, divNum, i, mainStore);
+        t[i] = std::thread(&VectorMatch::threadWork,k, p, cmpVecPos, divNum, i, mainStore);
 
     }
 
-
+    //wait for all threads to finish
+    for(int i = 0; i < p; i++){
+        t[i].join();
+    }
 
 
     //store the final results with line numbers

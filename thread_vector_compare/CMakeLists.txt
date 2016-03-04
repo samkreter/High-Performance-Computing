@@ -1,6 +1,8 @@
 cmake_minimum_required (VERSION 2.8)
 project (ipcSharedMemory)
 
+set(CMAKE_CXX_COMPILER "g++-4.9")
+
 set(CMAKE_CXX_FLAGS "--std=c++11 -O2 -Werror")
 
 add_library(vectorMatch src/vectorMatch.cpp)
