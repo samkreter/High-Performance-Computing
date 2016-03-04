@@ -34,7 +34,7 @@ int main(int argc, char** argv){
 
     chrono::duration<double> read_time_elapse;
 
-    string filename("../../../2100_HPC.csv");
+    string filename("../../../4200_HPC.csv");
 
 
 
@@ -142,6 +142,7 @@ int main(int argc, char** argv){
     output_vector_to_file("multiFile.csv",fileReadTimes,1);
 
 #endif
+
     //run python scripts for graphing
     //cout<<"system output: "<<system("python ../plotter.py");
 

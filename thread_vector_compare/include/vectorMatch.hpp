@@ -58,7 +58,7 @@ public:
     /// \param time_elapse: pointer to where to put the total duration of the processing
     /// \return int error code
     int computVectorMatch(std::string cmpFile, int k, int p,std::chrono::duration<double>* time_elapse);
-private:
+
     /// pointer to the datamap
     std::shared_ptr<MapString_t> nameMap;
     std::shared_ptr<InvMapString_t> lineNumMap = std::shared_ptr<InvMapString_t>(new InvMapString_t);
@@ -66,9 +66,7 @@ private:
     long lineLength = 0;
 
     /// finds the distance with two vectors with their startin gpoints
-    float findDist(long start1, long start2);
-
-    void threadWork(int k, int p, long cmpVecPos, int divNum, int i,storeKeyPair* mainStore);
+    static float findDist(long start1, long start2, long lineLength, float* rawData);
 
 };
 
