@@ -19,7 +19,7 @@ VectorMatch::VectorMatch(std::shared_ptr<MapString_t> nameMap, float* rawData, l
 
 }
 
-float VectorMatch::findDist(long start1, long start2, long lineLength, float* rawData){
+float VectorMatch::findDist(long start1, long start2){
 
     float sum = 0;
 
@@ -72,7 +72,7 @@ int createMapToLineNumber(std::map<long, std::string>* newMap, std::shared_ptr<V
     return 1;
 }
 
-void threadWork(int k, int p, long cmpVecPos, int divNum, int i,VectorMatch::storeKeyPair* mainStore, long lineLength,std::shared_ptr<VectorMatch::MapString_t> nameMap, float* rawData) {
+void threadWork(int k, int p, long cmpVecPos, int divNum, int i,VectorMatch::storeKeyPair* mainStore, VectorMatch* vObj) {
 
     long lineStatus = 0;
     int procNum = i;
@@ -83,14 +83,14 @@ void threadWork(int k, int p, long cmpVecPos, int divNum, int i,VectorMatch::sto
 
     int topBound = ((procNum * divNum) + divNum);
     if(i == (p-1)){
-        topBound += nameMap->size() % p;
+        topBound += vObj->nameMap->size() % p;
     }
 
 
     //get the distances and store them into a map that auto sorts by distance
     for(long j = procNum * divNum; j < topBound -1; j++){
         //add the distance to the results map
-        results.insert(std::pair<float,int>(VectorMatch::findDist(cmpVecPos, j,lineLength, rawData ), j * lineLength));
+        results.insert(std::pair<float,int>(vObj->findDist(cmpVecPos, j), j * vObj->lineLength));
 
     }
 
@@ -157,7 +157,7 @@ int VectorMatch::computVectorMatch(std::string cmpFile, int k, int p, std::chron
     // 1 proc per file
     for(int i = 0; i < p; i++){
         //t[i] = std::thread(&testing,i);
-        t[i] = std::thread(threadWork,k,p,cmpVecPos,divNum, i, mainStore, this->lineLength,this->nameMap, this->rawData);
+        t[i] = std::thread(threadWork,k,p,cmpVecPos,divNum, i, mainStore, this);
 
     }
 
