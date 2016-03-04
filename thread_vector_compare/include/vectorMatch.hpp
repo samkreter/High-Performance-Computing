@@ -15,6 +15,7 @@
 #include <cfloat>
 #include <exception>
 #include <set>
+#include <thread>
 
 
 //sys ipc stuff, you know the real stuff
@@ -66,6 +67,8 @@ private:
 
     /// finds the distance with two vectors with their startin gpoints
     float findDist(long start1, long start2);
+
+    int threadWork(int k, int p, long cmpVecPos, int divNum, int i);
 
 };
 
