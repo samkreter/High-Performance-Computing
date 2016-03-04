@@ -154,13 +154,7 @@ int VectorMatch::computVectorMatch(std::string cmpFile, int k, int p,std::chrono
 
     std::cout<<"Time for parent processing: "<<(*time_elapse).count()<<std::endl;
 
-
-    //delete the shrared mem, that stuff is scary
-    //but its actually working great this time around
-    if ((shmctl(shmId,IPC_RMID,0))==-1){
-        std::cerr<<"shared mem couldn't be deleted"<<std::endl;
-        return -1;
-    }
+    
 
     return 1;
 
@@ -169,23 +163,23 @@ int VectorMatch::computVectorMatch(std::string cmpFile, int k, int p,std::chrono
 int VectorMatch::threadWork(int k, int p, long cmpVecPos, int divNum, int i,storeKeyPair* mainStore) {
     long lineStatus = 0;
     int procNum = i;
+
     //store the results of the vector
-    std::__1::map<float,int> results;
+    std::map<float,int> results;
 
 
     int topBound = ((procNum * divNum) + divNum);
     if(i == (p-1)){
-                topBound += this->nameMap->size() % p;
-            }
+        topBound += this->nameMap->size() % p;
+    }
 
 
     //get the distances and store them into a map that auto sorts by distance
     for(long j = procNum * divNum; j < topBound -1; j++){
-                //add the distance to the results map
-                results.insert(this->pair(findDist(cmpVecPos, j), j * this->lineLength));
+        //add the distance to the results map
+        results.insert(std::pair(findDist(cmpVecPos, j), j * this->lineLength));
 
-
-            }
+    }
 
 
 
@@ -194,21 +188,21 @@ int VectorMatch::threadWork(int k, int p, long cmpVecPos, int divNum, int i,stor
     int kcount = 0;
 
     for(auto& pair : results){
-                if(kcount >= k){
-                    break;
-                }
-                shm[count].dist = pair.first;
-                shm[count].lineNum = pair.second;
-                count++;
-                kcount++;
-            }
+        if(kcount >= k){
+            break;
+        }
+        mainStore[count].dist = pair.first;
+        mainStore[count].lineNum = pair.second;
+        count++;
+        kcount++;
+    }
 
 
     //not usre if this is going to work but lets try
     //zero out the contents
     for(;count <= ((procNum*k)+k); count++){
-                shm[count].dist = FLT_MAX;
-            }
+        mainStore[count].dist = FLT_MAX;
+    }
 
 }
 
