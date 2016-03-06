@@ -3,7 +3,6 @@
 
 //simle converstion for the array indxing to real index
 # define ROWMATRIXPOS(rowSize , row, col) (rowSize * row) + col
-# define LINENUM(rowSize , index) (rowSize / index)
 
 
 
@@ -60,17 +59,6 @@ bool shmKeyPairSort(const VectorMatch::storeKeyPair& pair1, const VectorMatch::s
     return pair1.dist < pair2.dist;
 }
 
-
-//this is really slow but it'll work for now till I get to optimizing this
-int createMapToLineNumber(std::map<long, std::string>* newMap, std::shared_ptr<VectorMatch::MapString_t> dMap){
-    long lineCounter = 0;
-    for(auto& data : *dMap){
-        (*newMap).insert(std::pair<long,std::string>(lineCounter,data.first));
-        lineCounter++;
-    }
-
-    return 1;
-}
 
 
 int VectorMatch::computVectorMatch(std::string cmpFile, int k, int p,std::chrono::duration<double>* time_elapse){
