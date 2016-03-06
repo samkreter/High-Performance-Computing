@@ -3,6 +3,10 @@
 
 #include <iterator>
 
+#define BASE_CASE 0
+#define MULTI_PROC 1
+#define MULTI_FILE 0
+
 using namespace std;
 
 using MapString_t = std::map<std::string,long>;
@@ -34,11 +38,11 @@ int main(int argc, char** argv){
 
     chrono::duration<double> read_time_elapse;
 
-    string filename("../../../2100_HPC.csv");
+    string filename("../../../4200_HPC.csv");
 
 
 
-#if 0
+#if BASE_CASE == 1
     if(argc != 5){
         cerr<<"Arguments not correct, <query/_filename_line_to_match> <dataFile> <K> <P>"<<endl;
         exit(-1);
@@ -67,12 +71,12 @@ int main(int argc, char** argv){
         }
     }
 
-    #endif
+#endif
 
 
 //multi proc tests - only works if you change the above file locatoins to show
     //where the files are
-#if 1
+#if MULTI_PROC == 1
     {
         shared_ptr<MapString_t> nameMap(new MapString_t);
         shared_ptr<vector<float>> dataVector(new vector<float>);
@@ -105,7 +109,7 @@ int main(int argc, char** argv){
 
 //multi file tests - only works if you change the above file locatoins to show
     //where the files are
-#if 0
+#if MULTI_FILE == 1
 
 
     //clear the times in the vector
@@ -143,7 +147,7 @@ int main(int argc, char** argv){
 
 #endif
     //run python scripts for graphing
-    //cout<<"system output: "<<system("python ../plotter.py");
+    cout<<"system output: "<<system("python ../plotter.py");
 
 
     return 0;
