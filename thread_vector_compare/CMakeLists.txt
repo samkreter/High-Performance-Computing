@@ -16,7 +16,7 @@ IF(OPENMP_FOUND)
     set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
 ENDIF()
 
-set(CMAKE_CXX_FLAGS "--std=c++11 -O2 -Werror")
+set(CMAKE_CXX_FLAGS "--std=c++11 -pthread -Werror")
 
 add_library(vectorMatch src/vectorMatch.cpp)
 add_library(parser src/parser.cpp)
