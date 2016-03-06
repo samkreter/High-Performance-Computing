@@ -24,7 +24,6 @@ float VectorMatch::findDist(long start1, long start2){
 
     //run the l1 norm formula
     for(int i = 0; i < lineLength; i++){
-
         sum += std::fabs(rawData[(start1+i)] - rawData[ROWMATRIXPOS(lineLength,start2,i)]);
     }
 
@@ -62,7 +61,6 @@ bool shmKeyPairSort(const VectorMatch::storeKeyPair& pair1, const VectorMatch::s
 
 
 int VectorMatch::computVectorMatch(std::string cmpFile, int k, int p,std::chrono::duration<double>* time_elapse){
-
 
 
     //start and end for times the proc work

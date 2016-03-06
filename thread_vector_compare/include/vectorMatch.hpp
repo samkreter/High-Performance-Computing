@@ -16,13 +16,9 @@
 #include <exception>
 #include <set>
 #include <thread>
+#include <omp.h>
 
 
-//sys ipc stuff, you know the real stuff
-#include <unistd.h>
-#include <sys/ipc.h>
-#include <sys/shm.h>
-#include <sys/wait.h>
 
 class VectorMatch{
 
