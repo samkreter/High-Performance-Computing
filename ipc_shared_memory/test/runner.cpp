@@ -38,7 +38,7 @@ int main(int argc, char** argv){
 
 
 
-#if 1
+#if 0
     if(argc != 5){
         cerr<<"Arguments not correct, <query/_filename_line_to_match> <dataFile> <K> <P>"<<endl;
         exit(-1);
@@ -72,7 +72,7 @@ int main(int argc, char** argv){
 
 //multi proc tests - only works if you change the above file locatoins to show
     //where the files are
-#if 0
+#if 1
     {
         shared_ptr<MapString_t> nameMap(new MapString_t);
         shared_ptr<vector<float>> dataVector(new vector<float>);
@@ -105,7 +105,7 @@ int main(int argc, char** argv){
 
 //multi file tests - only works if you change the above file locatoins to show
     //where the files are
-#if 0
+#if 1
 
 
     //clear the times in the vector
@@ -143,7 +143,7 @@ int main(int argc, char** argv){
 
 #endif
     //run python scripts for graphing
-    //cout<<"system output: "<<system("python ../plotter.py");
+    cout<<"system output: "<<system("python ../plotter.py");
 
 
     return 0;
