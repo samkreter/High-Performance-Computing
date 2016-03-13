@@ -7,6 +7,10 @@
 #define MULTI_PROC 1
 #define MULTI_FILE 0
 
+#ifndef POSITION
+#define POSITION 0
+#endif
+
 using namespace std;
 
 using MapString_t = std::map<std::string,long>;
@@ -16,7 +20,6 @@ using MapString_t = std::map<std::string,long>;
 int output_vector_to_file(std::string filename, std::vector<double> vec, int append);
 
 int main(int argc, char** argv){
-
 
     //set up for the number of process
     vector<double> procs{1, 2, 4, 6, 8, 12, 16};
@@ -99,7 +102,7 @@ int main(int argc, char** argv){
             }
 
             //write the times to a file
-            output_vector_to_file("test.csv",procs,0);
+            output_vector_to_file("test.csv",procs,1);
             output_vector_to_file("test.csv",times,1);
 
 
@@ -142,7 +145,7 @@ int main(int argc, char** argv){
     inputNums.push_back(6300);
     inputNums.push_back(8400);
 
-    output_vector_to_file("multiFile.csv",inputNums,0);
+    output_vector_to_file("multiFile.csv",inputNums,1);
     output_vector_to_file("multiFile.csv",times,1);
     output_vector_to_file("multiFile.csv",fileReadTimes,1);
 
@@ -169,6 +172,7 @@ int output_vector_to_file(std::string filename, std::vector<double> vec, int app
     }
 
     if(outputFile.is_open()){
+        vec.insert(vec.begin(),POSITION);
 
         std::copy(vec.begin(), vec.end()-1,
         std::ostream_iterator<float>(ossVec, ","));
