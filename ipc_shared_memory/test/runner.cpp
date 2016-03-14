@@ -3,6 +3,14 @@
 
 #include <iterator>
 
+#define BASE_CASE 0
+#define MULTI_PROC 1
+#define MULTI_FILE 1
+
+#ifndef POSITION
+#define POSITION 0
+#endif
+
 using namespace std;
 
 using MapString_t = std::map<std::string,long>;
@@ -13,18 +21,18 @@ int output_vector_to_file(std::string filename, std::vector<double> vec, int app
 
 int main(int argc, char** argv){
 
-
-
+    //set up for the number of process
     vector<double> procs{1, 2, 4, 6, 8, 12, 16};
     vector<double> times;
 
-
+    //just set up vars for the run trhoughs
     vector<string> inputFileNames;
     inputFileNames.push_back("../../../2100_HPC.csv");
     inputFileNames.push_back("../../../4200_HPC.csv");
     inputFileNames.push_back("../../../6300_HPC.csv");
     inputFileNames.push_back("../../../8400_HPC.csv");
 
+    //you know just more set up stuff
     vector<string> inputFileFirsts;
     inputFileFirsts.push_back("agricultural/agricultural00.tif");
     inputFileFirsts.push_back("agricultural/agricultural00_rot_000.tif");
@@ -33,13 +41,11 @@ int main(int argc, char** argv){
 
     chrono::duration<double> read_time_elapse;
 
-    string filename("../../../6300_HPC.csv");
-    //have to remeber to free it from the heap
-    // cout<<"Please enter the file path relative to this execting program, for example '../test/HPC_DATA.csv': ";
-    // cin>>filename;
+    string filename("../../../8400_HPC.csv");
 
 
-#if 0
+
+#if BASE_CASE == 1
     if(argc != 5){
         cerr<<"Arguments not correct, <query/_filename_line_to_match> <dataFile> <K> <P>"<<endl;
         exit(-1);
@@ -62,17 +68,19 @@ int main(int argc, char** argv){
 
 
     if(p.parse_file(argv[2],&read_time_elapse)){
-         VectorMatch v(nameMap,(*dataVector).data(),p.get_line_length());
-         v.computVectorMatch(argv[1],k,pNumuser,&read_time_elapse);
-
+        cout<<"Time to parser file: "<<read_time_elapse.count()<<endl;
+        VectorMatch v(nameMap,(*dataVector).data(),p.get_line_length());
+        if(v.computVectorMatch(argv[1],k,pNumuser,&read_time_elapse)){
+            cout<<"\noutput was writen to results.csv, thanks and have a great day."<<endl;
+        }
     }
 
-    cout<<"\noutput was writen to results.csv, thanks and I hope you have a decent day today"<<endl;
 #endif
 
 
-//multi proc tests
-#if 1
+//multi proc tests - only works if you change the above file locatoins to show
+    //where the files are
+#if MULTI_PROC == 1
     {
         shared_ptr<MapString_t> nameMap(new MapString_t);
         shared_ptr<vector<float>> dataVector(new vector<float>);
@@ -85,8 +93,8 @@ int main(int argc, char** argv){
             VectorMatch v(nameMap,(*dataVector).data(),p.get_line_length());
             for(int i = 0; i < procs.size(); i++){
                 chrono::duration<double> proc_time_elapse;
-                cout<<procs.at(i)<<" procs"<<endl;
-                v.computVectorMatch("agricultural/agricultural00_rot_090.tif",100,procs.at(i),&proc_time_elapse);
+                cout<<procs.at(i)<<" Threads"<<endl;
+                v.computVectorMatch("agricultural/agricultural00_rot_090.tif",1000,procs.at(i),&proc_time_elapse);
                 //v.computVectorMatch("agricultural/agricultural00_rot_000.tif",100,procs.at(i),&proc_time_elapse);
                 //v.computVectorMatch("agricultural/agricultural00.tif",100,procs.at(i),&proc_time_elapse);
                 times.push_back(proc_time_elapse.count());
@@ -94,8 +102,8 @@ int main(int argc, char** argv){
             }
 
             //write the times to a file
-            output_vector_to_file("test.csv",procs,0);
-            output_vector_to_file("test.csv",times,1);
+            output_vector_to_file("../../../hw3Data/test.csv",procs,1);
+            output_vector_to_file("../../../hw3Data/test.csv",times,1);
 
 
         }
@@ -103,8 +111,9 @@ int main(int argc, char** argv){
 
 #endif
 
-//multi file tests
-#if 1
+//multi file tests - only works if you change the above file locatoins to show
+    //where the files are
+#if MULTI_FILE == 1
 
 
     //clear the times in the vector
@@ -121,7 +130,7 @@ int main(int argc, char** argv){
         if(p.parse_file(inputFileNames.at(i),&read_time_elapse)){
             fileReadTimes.push_back(read_time_elapse.count());
             VectorMatch v(nameMap,(*dataVector).data(),p.get_line_length());
-            v.computVectorMatch(inputFileFirsts.at(i),100,4,&proc_time_elapse);
+            v.computVectorMatch(inputFileFirsts.at(i),1000,4,&proc_time_elapse);
             times.push_back(proc_time_elapse.count());
         }
         else{
@@ -136,9 +145,9 @@ int main(int argc, char** argv){
     inputNums.push_back(6300);
     inputNums.push_back(8400);
 
-    output_vector_to_file("multiFile.csv",inputNums,0);
-    output_vector_to_file("multiFile.csv",times,1);
-    output_vector_to_file("multiFile.csv",fileReadTimes,1);
+    output_vector_to_file("../../../hw3Data/multiFile.csv",inputNums,1);
+    output_vector_to_file("../../../hw3Data/multiFile.csv",times,1);
+    output_vector_to_file("../../../hw3Data/multiFile.csv",fileReadTimes,1);
 
 #endif
     //run python scripts for graphing
@@ -163,6 +172,7 @@ int output_vector_to_file(std::string filename, std::vector<double> vec, int app
     }
 
     if(outputFile.is_open()){
+        vec.insert(vec.begin(),POSITION);
 
         std::copy(vec.begin(), vec.end()-1,
         std::ostream_iterator<float>(ossVec, ","));
