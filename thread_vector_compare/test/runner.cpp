@@ -5,7 +5,7 @@
 
 #define BASE_CASE 0
 #define MULTI_PROC 1
-#define MULTI_FILE 0
+#define MULTI_FILE 1
 
 #ifndef POSITION
 #define POSITION 0
@@ -41,7 +41,7 @@ int main(int argc, char** argv){
 
     chrono::duration<double> read_time_elapse;
 
-    string filename("../../../6300_HPC.csv");
+    string filename("../../../8400_HPC.csv");
 
 
 
@@ -94,7 +94,7 @@ int main(int argc, char** argv){
             for(int i = 0; i < procs.size(); i++){
                 chrono::duration<double> proc_time_elapse;
                 cout<<procs.at(i)<<" Threads"<<endl;
-                v.computVectorMatch("agricultural/agricultural00_rot_090.tif",2000,procs.at(i),&proc_time_elapse);
+                v.computVectorMatch("agricultural/agricultural00_rot_090.tif",1000,procs.at(i),&proc_time_elapse);
                 //v.computVectorMatch("agricultural/agricultural00_rot_000.tif",100,procs.at(i),&proc_time_elapse);
                 //v.computVectorMatch("agricultural/agricultural00.tif",100,procs.at(i),&proc_time_elapse);
                 times.push_back(proc_time_elapse.count());
@@ -102,8 +102,8 @@ int main(int argc, char** argv){
             }
 
             //write the times to a file
-            output_vector_to_file("test.csv",procs,1);
-            output_vector_to_file("test.csv",times,1);
+            output_vector_to_file("../../../hw3Data/test.csv",procs,1);
+            output_vector_to_file("../../../hw3Data/test.csv",times,1);
 
 
         }
@@ -130,7 +130,7 @@ int main(int argc, char** argv){
         if(p.parse_file(inputFileNames.at(i),&read_time_elapse)){
             fileReadTimes.push_back(read_time_elapse.count());
             VectorMatch v(nameMap,(*dataVector).data(),p.get_line_length());
-            v.computVectorMatch(inputFileFirsts.at(i),2000,4,&proc_time_elapse);
+            v.computVectorMatch(inputFileFirsts.at(i),1000,4,&proc_time_elapse);
             times.push_back(proc_time_elapse.count());
         }
         else{
@@ -145,9 +145,9 @@ int main(int argc, char** argv){
     inputNums.push_back(6300);
     inputNums.push_back(8400);
 
-    output_vector_to_file("multiFile.csv",inputNums,1);
-    output_vector_to_file("multiFile.csv",times,1);
-    output_vector_to_file("multiFile.csv",fileReadTimes,1);
+    output_vector_to_file("../../../hw3Data/multiFile.csv",inputNums,1);
+    output_vector_to_file("../../../hw3Data/multiFile.csv",times,1);
+    output_vector_to_file("../../../hw3Data/multiFile.csv",fileReadTimes,1);
 
 #endif
     //run python scripts for graphing
